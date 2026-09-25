@@ -1,0 +1,8 @@
+{
+  "name": "Sylvia and Dr. Peter Wedding Invitation1",
+  "description": "An elegant, premium dark-mode wedding invitation and RSVP portal for Sylvia and Dr. Peter\u0027s wedding, featuring schedule, dress code, maps, and e-card generator.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
