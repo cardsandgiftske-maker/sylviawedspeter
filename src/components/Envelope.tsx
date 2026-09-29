@@ -349,12 +349,11 @@ export default function Envelope({ onOpen, onSealBreak }: EnvelopeProps) {
                             
                             <g filter="url(#subtle-shadow)">
                               <text 
-                                x="33" 
-                                y="58" 
-                                fontFamily="'Playfair Display', 'Didot', 'Georgia', serif" 
-                                fontSize="33" 
-                                fontWeight="light"
-                                fontStyle="italic"
+                                x="32" 
+                                y="59" 
+                                fontFamily="'Great Vibes', 'Alex Brush', 'Pinyon Script', cursive" 
+                                fontSize="40" 
+                                fontWeight="normal"
                                 fill="url(#gold-seal)"
                                 textAnchor="middle"
                               >
@@ -363,8 +362,8 @@ export default function Envelope({ onOpen, onSealBreak }: EnvelopeProps) {
                               <text 
                                 x="49" 
                                 y="53" 
-                                fontFamily="'Playfair Display', 'Didot', 'Georgia', serif" 
-                                fontSize="17" 
+                                fontFamily="'Playfair Display', 'Cormorant Garamond', serif" 
+                                fontSize="16" 
                                 fontStyle="italic"
                                 fill="url(#gold-seal)"
                                 opacity="0.9"
@@ -373,12 +372,11 @@ export default function Envelope({ onOpen, onSealBreak }: EnvelopeProps) {
                                 &amp;
                               </text>
                               <text 
-                                x="66" 
-                                y="58" 
-                                fontFamily="'Playfair Display', 'Didot', 'Georgia', serif" 
-                                fontSize="33" 
-                                fontWeight="light"
-                                fontStyle="italic"
+                                x="67" 
+                                y="59" 
+                                fontFamily="'Great Vibes', 'Alex Brush', 'Pinyon Script', cursive" 
+                                fontSize="40" 
+                                fontWeight="normal"
                                 fill="url(#gold-seal)"
                                 textAnchor="middle"
                               >
