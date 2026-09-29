@@ -36,7 +36,9 @@ export const WEDDING_DETAILS = {
   },
   transitInfo: {
     duration: '40–45 min drive',
-    description: 'The journey from Kamwangi Catholic Church to Tropical Gardens Ruiru-Kimbo is approximately 40 to 45 minutes along the scenic Kiambu / Thika Road corridor.',
+    route: 'Scenic drive via Gatundu - Kiganjo road',
+    description: 'From Kamwangi to Tropical Gardens, guests will use a: Scenic drive via Gatundu - Kiganjo road.',
+    directionsNote: 'A smooth, picturesque journey connecting Kamwangi Catholic Church through Gatundu and Kiganjo road directly to Tropical Gardens Ruiru-Kimbo.',
   },
   rsvpDeadline: '30th November 2026',
   rsvpNote: 'Kindly confirm your attendance with your full names by 30th November so we can reserve your seat and prepare to celebrate with you.',
@@ -52,6 +54,7 @@ export const WEDDING_DETAILS = {
   gifts: {
     title: 'Wedding Gifts & Blessings',
     message: 'Your presence and prayers as we begin our marriage are more than we could ask for. Should you wish to bless us further, we gratefully welcome a gift in the form of an envelope or M-Pesa toward our new life together.',
+    wishlistIntro: "For friends and family who have asked about gifts, we've put together a small wishlist of things we'd love as we start our home together.",
     envelope: {
       title: 'Gift in an Envelope',
       instruction: 'A decorated gift envelope drop box will be gracefully stationed at the reception entrance at Tropical Gardens Ruiru-Kimbo for your cards, envelopes, and warm blessings.',
@@ -63,43 +66,111 @@ export const WEDDING_DETAILS = {
       number: '0722 000 000',
       tillNumber: '5849201',
     },
+    wishlist: [
+      {
+        id: 1,
+        name: 'Philips 5000 Series HR3033/00 Blender',
+        category: 'Kitchen Appliances',
+        brand: 'Philips',
+        notes: 'High-speed ProBlend Plus technology blender'
+      },
+      {
+        id: 2,
+        name: 'Philips 3000 Series 6.2 L Air Fryer',
+        category: 'Kitchen Appliances',
+        brand: 'Philips',
+        notes: 'Preferably model NA332/09'
+      },
+      {
+        id: 3,
+        name: "De'Longhi Dedica EC685 Coffee Maker",
+        category: 'Kitchen Appliances',
+        brand: "De'Longhi",
+        notes: 'Slim espresso machine for morning brew'
+      },
+      {
+        id: 4,
+        name: 'Von Electric Pressure Cooker',
+        category: 'Kitchen Appliances',
+        brand: 'Von',
+        notes: 'With stainless steel bowl (or any with stainless steel bowl)'
+      },
+      {
+        id: 5,
+        name: 'LG MS2595CIS 25 L NeoChef Solo Microwave',
+        category: 'Kitchen Appliances',
+        brand: 'LG',
+        notes: 'Smart Inverter solo microwave'
+      },
+      {
+        id: 6,
+        name: 'Kärcher WD 3 Wet & Dry Vacuum Cleaner',
+        category: 'Home & Cleaning',
+        brand: 'Kärcher',
+        notes: 'Multi-purpose vacuum cleaner'
+      },
+      {
+        id: 7,
+        name: 'Sony HT-S20R 5.1-channel Home Cinema Sound System',
+        category: 'Living & Entertainment',
+        brand: 'Sony',
+        notes: 'Dolby Digital 5.1ch surround sound system'
+      },
+      {
+        id: 8,
+        name: 'LG 55" 4K UHD Smart TV',
+        category: 'Living & Entertainment',
+        brand: 'LG',
+        notes: '4K Ultra HD Smart Television'
+      },
+      {
+        id: 9,
+        name: 'LG Front Load Washing Machine, 10-15 kg',
+        category: 'Laundry & Home Care',
+        brand: 'LG',
+        notes: 'AI DD, Steam, built-in heater, 1400 rpm'
+      },
+      {
+        id: 10,
+        name: 'LG Double-Door No-Frost Refrigerator',
+        category: 'Kitchen & Cooling',
+        brand: 'LG',
+        notes: 'No-Frost double door refrigerator'
+      },
+      {
+        id: 11,
+        name: 'Philips / Tefal Steam Iron + Ironing Board',
+        category: 'Laundry & Home Care',
+        brand: 'Philips / Tefal',
+        notes: 'Steam iron with sturdy folding ironing board'
+      },
+      {
+        id: 12,
+        name: 'Sony 5.1 Channel Sound System',
+        category: 'Living & Entertainment',
+        brand: 'Sony',
+        notes: '5.1 Channel High-Fidelity Audio System'
+      }
+    ]
   },
   themeColors: {
-    sapphireBlue: {
-      name: 'Sapphire Blue',
-      hex: '#1E3A8A',
+    primary: {
+      name: 'Navy Blue',
+      hex: '#0F2444',
       textColor: '#FFFFFF',
-      description: 'A deep, regal blue signifying loyalty, devotion, and steadfast love.',
+      description: 'A deep, majestic navy blue embodying devotion, honor, loyalty, and eternal love.',
     },
-    emeraldGreen: {
-      name: 'Emerald Green',
-      hex: '#047857',
-      textColor: '#FFFFFF',
-      description: 'A rich jewel green representing vitality, prosperity, and God’s abundant blessings.',
+    secondary: {
+      name: 'Crisp White',
+      hex: '#FFFFFF',
+      textColor: '#0F2444',
+      description: 'Pure, timeless white representing grace, sacred vows, and a brilliant new beginning.',
     },
-    oceanTeal: {
-      name: 'Ocean Teal',
-      hex: '#0D9488',
-      textColor: '#FFFFFF',
-      description: 'A vibrant blend of blue and green expressing joy, freshness, and harmony.',
-    },
-    forestSage: {
-      name: 'Forest Sage',
-      hex: '#3D5A45',
-      textColor: '#FFFFFF',
-      description: 'A botanical earthy green celebrating the natural beauty of Kenya’s lush garden landscapes.',
-    },
-    skyBlue: {
-      name: 'Cerulean Sky Blue',
-      hex: '#38BDF8',
-      textColor: '#082F49',
-      description: 'A luminous, celebratory azure reflecting hope, peace, and boundless skies.',
-    },
-    champagneGold: {
+    accent: {
       name: 'Champagne Gold',
       hex: '#D4AF37',
       textColor: '#594411',
-      description: 'A radiant golden accent honoring the sacred sacrament and joyous celebration.',
+      description: 'Radiant golden foil accents celebrating the holy sacrament of matrimony.',
     },
   },
   bibleVerses: [
