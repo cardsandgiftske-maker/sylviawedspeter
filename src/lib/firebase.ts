@@ -1,6 +1,7 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { 
   getFirestore, 
+  initializeFirestore,
   collection, 
   doc, 
   setDoc, 
@@ -9,8 +10,7 @@ import {
   onSnapshot, 
   query, 
   orderBy, 
-  updateDoc,
-  getDocFromServer
+  updateDoc
 } from 'firebase/firestore';
 import { RsvpGuest } from '../types';
 import firebaseAppletConfig from '../../firebase-applet-config.json';
@@ -44,28 +44,21 @@ export function getDb() {
   if (!dbInstance) {
     try {
       const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
-      dbInstance = firebaseConfig.firestoreDatabaseId
-        ? getFirestore(app, firebaseConfig.firestoreDatabaseId)
-        : getFirestore(app);
-
-      // Validate connection asynchronously in background
-      testConnection(dbInstance);
+      try {
+        dbInstance = initializeFirestore(app, {
+          experimentalAutoDetectLongPolling: true,
+        }, firebaseConfig.firestoreDatabaseId || undefined);
+      } catch {
+        dbInstance = firebaseConfig.firestoreDatabaseId
+          ? getFirestore(app, firebaseConfig.firestoreDatabaseId)
+          : getFirestore(app);
+      }
     } catch (error) {
       console.error('Firebase initialization error:', error);
       return null;
     }
   }
   return dbInstance;
-}
-
-async function testConnection(db: any) {
-  try {
-    await getDocFromServer(doc(db, 'test', 'connection'));
-  } catch (error) {
-    if (error instanceof Error && error.message.includes('the client is offline')) {
-      console.warn('Firebase client is offline or starting up.');
-    }
-  }
 }
 
 // ==========================================
@@ -283,9 +276,6 @@ const getSeedData = (): RsvpGuest[] => {
   ];
 };
 
-/**
- * Clean and normalize phone numbers for deduplication checks
- */
 export function normalizePhoneNumber(phone: string): string {
   if (!phone) return '';
   let cleaned = phone.replace(/[^\d+]/g, '');
@@ -297,9 +287,6 @@ export function normalizePhoneNumber(phone: string): string {
   return cleaned;
 }
 
-/**
- * Check if a phone number has already submitted an RSVP
- */
 export async function hasPhoneAlreadyRsvped(phone: string): Promise<boolean> {
   const normTarget = normalizePhoneNumber(phone);
   if (!normTarget) return false;
@@ -308,9 +295,6 @@ export async function hasPhoneAlreadyRsvped(phone: string): Promise<boolean> {
   return currentRsvps.some((r) => normalizePhoneNumber(r.phoneNumber) === normTarget);
 }
 
-/**
- * Fetch all RSVPs. Auto-seeds default entries if database is empty.
- */
 export async function getRsvps(): Promise<RsvpGuest[]> {
   const db = getDb();
   if (db) {
@@ -339,14 +323,11 @@ export async function getRsvps(): Promise<RsvpGuest[]> {
   return local.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
 }
 
-/**
- * Save or update an RSVP entry
- */
-export async function saveRsvp(guest: Omit<RsvpGuest, 'id' | 'submittedAt'> | RsvpGuest): Promise<RsvpGuest> {
+export async function saveRsvp(guest: Omit<RsvpGuest, 'id' | 'submittedAt'>): Promise<RsvpGuest> {
   const newGuest: RsvpGuest = {
     ...guest,
-    id: 'id' in guest ? guest.id : 'rsvp-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7),
-    submittedAt: 'submittedAt' in guest ? guest.submittedAt : new Date().toISOString()
+    id: 'rsvp-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7),
+    submittedAt: new Date().toISOString()
   };
   
   const db = getDb();
@@ -366,9 +347,6 @@ export async function saveRsvp(guest: Omit<RsvpGuest, 'id' | 'submittedAt'> | Rs
   return newGuest;
 }
 
-/**
- * Delete an RSVP entry
- */
 export async function deleteRsvp(id: string): Promise<void> {
   const db = getDb();
   if (db) {
@@ -384,9 +362,6 @@ export async function deleteRsvp(id: string): Promise<void> {
   saveLocalRsvps(updated);
 }
 
-/**
- * Toggle RSVP attendance status or change seat count
- */
 export async function updateRsvpStatus(
   id: string, 
   willAttend: 'yes' | 'no', 
@@ -423,9 +398,6 @@ export async function updateRsvpStatus(
   saveLocalRsvps(updated);
 }
 
-/**
- * Real-time RSVP updates subscription across clients
- */
 export function subscribeToRsvps(onUpdate: (rsvps: RsvpGuest[]) => void): () => void {
   const db = getDb();
   if (db) {
