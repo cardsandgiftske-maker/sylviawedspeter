@@ -214,12 +214,13 @@ export const PROGRAM_ITEMS: ProgramItem[] = [
   {
     time: '12:00 PM – 12:45 PM',
     duration: '40–45 Mins Drive',
-    title: 'Drive from Kamwangi to Tropical Gardens',
-    description: 'Guests and bridal convoy journey from Kamwangi Catholic Church to Tropical Gardens Ruiru-Kimbo (~40-45 minutes drive).',
+    title: 'Scenic Reception Route: Kamwangi to Tropical Gardens',
+    description: 'Guests and bridal convoy journey from Our Lady of the Holy Rosary Kamwangi Catholic Church to Tropical Gardens Ruiru-Kimbo via the picturesque Gatundu - Kiganjo road (~40–45 minutes drive).',
     bullets: [
-      'Scenic drive via Kiambu/Thika Road corridor',
-      'Bridal party photographic stopover',
-      'Traffic marshals and parking guidance on arrival',
+      'Scenic drive via Gatundu - Kiganjo road',
+      'Smooth, well-tarmacked highway through scenic Kiambu landscapes',
+      'Bridal party photographic stopover & celebratory convoy',
+      'On-site traffic marshals and ample parking at Tropical Gardens',
     ],
     isChurch: false,
   },
