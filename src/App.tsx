@@ -98,26 +98,26 @@ export default function App() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.2, ease: 'easeOut' }}
-          className="relative min-h-screen bg-[#FAF9F6] text-stone-800 font-sans selection:bg-sapphire-100 selection:text-sapphire-900 overflow-x-hidden antialiased"
+          className="relative min-h-screen bg-[#FAFBFD] text-stone-850 font-sans selection:bg-navy-100 selection:text-navy-900 overflow-x-hidden antialiased"
         >
           {/* Background visual textures */}
           <div className="fixed inset-0 pointer-events-none z-0">
             {/* Subtle top and bottom vignettes */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-sapphire-500/[0.02] via-transparent to-transparent" />
-            <div className="absolute inset-0 bg-[#FAF9F6]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-navy-500/[0.03] via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-[#FAFBFD]" />
           </div>
 
           {/* Floating Header Navigation (Clean, Minimalist, Luxury-Style) */}
-          <header className="fixed top-0 inset-x-0 z-40 bg-[#FAF9F6]/90 backdrop-blur-md border-b border-stone-200/50 transition-all">
+          <header className="fixed top-0 inset-x-0 z-40 bg-white/90 backdrop-blur-md border-b border-navy-100 transition-all">
             <div className="container mx-auto px-4 h-16 flex items-center justify-between">
               {/* Logo Name: Sylvia & Dr. Peter */}
               <button 
                 onClick={() => scrollToSection('hero-section')}
                 className="font-serif text-lg tracking-widest font-light cursor-pointer flex items-center gap-1.5 hover:opacity-90 transition-opacity"
               >
-                <span className="text-sapphire-900 font-semibold">SYLVIA</span>
+                <span className="text-navy-950 font-bold">SYLVIA</span>
                 <span className="text-champagne-600 font-serif italic text-base">&amp;</span>
-                <span className="text-emerald-800 font-semibold">DR. PETER</span>
+                <span className="text-navy-900 font-bold">DR. PETER</span>
               </button>
 
               {/* Desktop Nav menu items */}
@@ -128,9 +128,9 @@ export default function App() {
                     <button
                       key={item.id}
                       onClick={() => scrollToSection(item.id)}
-                      className={`px-3.5 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer hover:text-stone-950 ${
+                      className={`px-3.5 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer hover:text-navy-950 ${
                         activeSection === item.id 
-                          ? 'bg-sapphire-100 text-sapphire-900 font-bold border border-sapphire-300'
+                          ? 'bg-navy-900 text-white font-bold border border-navy-800 shadow-xs'
                           : 'border border-transparent'
                       }`}
                     >
@@ -144,7 +144,7 @@ export default function App() {
               {/* Mobile Direct Action Button */}
               <button
                 onClick={() => scrollToSection('rsvp-section')}
-                className="md:hidden px-4 py-1.5 bg-sapphire-800 hover:bg-sapphire-900 text-white font-sans font-extrabold text-[10px] uppercase tracking-widest rounded-full transition-all cursor-pointer shadow-xs"
+                className="md:hidden px-4 py-1.5 bg-navy-900 hover:bg-navy-800 text-white font-sans font-extrabold text-[10px] uppercase tracking-widest rounded-full transition-all cursor-pointer shadow-xs"
               >
                 RSVP NOW
               </button>
@@ -174,14 +174,14 @@ export default function App() {
                 title={item.label}
               >
                 {/* Label Tooltip hover */}
-                <span className="absolute right-full mr-4 bg-white/95 border border-stone-200 px-2.5 py-1 rounded text-[10px] font-sans font-bold uppercase tracking-wider shadow-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 text-sapphire-900 whitespace-nowrap">
+                <span className="absolute right-full mr-4 bg-white/95 border border-navy-200 px-2.5 py-1 rounded text-[10px] font-sans font-bold uppercase tracking-wider shadow-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 text-navy-900 whitespace-nowrap">
                   {item.label}
                 </span>
                 {/* Dot node */}
                 <span className={`w-2.5 h-2.5 rounded-full border transition-all ${
                   activeSection === item.id 
-                    ? 'bg-sapphire-800 border-sapphire-700 scale-125' 
-                    : 'bg-stone-200 border-stone-300/80 group-hover:border-stone-400 group-hover:scale-110'
+                    ? 'bg-navy-900 border-navy-800 scale-125' 
+                    : 'bg-stone-200 border-stone-300/80 group-hover:border-navy-400 group-hover:scale-110'
                 }`} />
               </button>
             ))}
@@ -199,7 +199,7 @@ export default function App() {
               >
                 <button
                   onClick={() => scrollToSection('hero-section')}
-                  className="p-3 bg-white hover:bg-stone-50 border border-stone-200/80 text-sapphire-800 rounded-full shadow-lg active:scale-95 transition-all cursor-pointer"
+                  className="p-3 bg-white hover:bg-navy-50 border border-navy-200 text-navy-900 rounded-full shadow-lg active:scale-95 transition-all cursor-pointer"
                   title="Scroll to Top"
                 >
                   <ChevronUp className="w-5 h-5" />
