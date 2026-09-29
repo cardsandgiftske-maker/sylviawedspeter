@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
-import { Gift, Mail, Smartphone, Check, Copy, Heart, Sparkles, ShoppingBag, CheckCircle2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Gift, Mail, Smartphone, Check, Copy, Heart, Sparkles, ShoppingBag, CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react';
 import { WEDDING_DETAILS } from '../data';
 
 export default function Gifts() {
   const [copiedType, setCopiedType] = useState<string | null>(null);
   const [copiedWishlistId, setCopiedWishlistId] = useState<number | null>(null);
+  const [showWishlist, setShowWishlist] = useState(false);
 
   const handleCopy = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
@@ -26,7 +27,7 @@ export default function Gifts() {
 
       <div className="container mx-auto px-4 max-w-5xl relative z-10">
         {/* Section Header */}
-        <div className="text-center mb-14">
+        <div className="text-center mb-12">
           <span className="text-navy-700 text-xs font-bold tracking-[0.25em] uppercase font-sans block mb-2">
             REGISTRY &amp; BLESSINGS
           </span>
@@ -50,88 +51,8 @@ export default function Gifts() {
           </div>
         </div>
 
-        {/* Home Registry Wishlist Section */}
-        <div className="mb-16">
-          <div className="bg-white border-2 border-navy-200/90 rounded-3xl p-6 md:p-10 shadow-sm relative overflow-hidden">
-            {/* Header for Wishlist */}
-            <div className="text-center max-w-2xl mx-auto mb-8">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-navy-50 border border-navy-200 text-navy-900 text-xs font-sans font-bold uppercase tracking-wider mb-3">
-                <ShoppingBag className="w-4 h-4 text-navy-700" />
-                <span>Home Registry Wishlist</span>
-              </div>
-              <h3 className="font-serif text-2xl md:text-3xl text-navy-950 font-normal">
-                Things We'd Love For Our New Home
-              </h3>
-              <p className="text-stone-600 font-sans text-sm md:text-base mt-2 leading-relaxed italic">
-                “{WEDDING_DETAILS.gifts.wishlistIntro}”
-              </p>
-            </div>
-
-            {/* 12 Wishlist Items Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {WEDDING_DETAILS.gifts.wishlist.map((item) => (
-                <div
-                  key={item.id}
-                  className="bg-navy-50/40 hover:bg-white border border-navy-150 hover:border-navy-400 rounded-2xl p-4 sm:p-5 transition-all flex items-start justify-between gap-3 shadow-2xs group"
-                >
-                  <div className="flex items-start gap-3.5">
-                    {/* Item Number Badge */}
-                    <div className="w-8 h-8 rounded-xl bg-navy-900 text-white font-sans font-bold text-xs flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
-                      {item.id}
-                    </div>
-
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-navy-700 bg-white border border-navy-200 px-2 py-0.5 rounded-md">
-                          {item.brand}
-                        </span>
-                        <span className="text-[10px] font-sans text-stone-500">
-                          {item.category}
-                        </span>
-                      </div>
-
-                      <h4 className="font-serif text-base sm:text-lg text-navy-950 font-semibold leading-snug">
-                        {item.name}
-                      </h4>
-
-                      {item.notes && (
-                        <p className="text-xs text-stone-600 font-sans">
-                          {item.notes}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Copy Button to facilitate shopping */}
-                  <button
-                    onClick={() => handleCopyWishlistItem(item.name + (item.notes ? ` (${item.notes})` : ''), item.id)}
-                    className="shrink-0 p-2 text-navy-700 hover:text-navy-950 bg-white border border-navy-200 hover:border-navy-400 rounded-xl transition-all cursor-pointer shadow-2xs active:scale-95"
-                    title="Copy item name for shopping"
-                  >
-                    {copiedWishlistId === item.id ? (
-                      <Check className="w-4 h-4 text-emerald-600" />
-                    ) : (
-                      <Copy className="w-4 h-4" />
-                    )}
-                  </button>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-8 pt-6 border-t border-navy-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-stone-500 font-sans">
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-navy-700" />
-                <span>Tap the copy icon on any item to copy its exact model name</span>
-              </span>
-              <span className="italic font-serif text-stone-600">
-                Any equivalent models or brands are also warmly appreciated!
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Giving Channels: Envelope & M-Pesa */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        {/* Primary Giving Channels: Envelope & M-Pesa */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
           {/* Option 1: Gift in an Envelope */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -231,6 +152,131 @@ export default function Gifts() {
               <span>We are deeply touched by your generosity and love.</span>
             </div>
           </motion.div>
+        </div>
+
+        {/* Curated Home Registry Wishlist: Placed discreetly so only interested guests click to see it */}
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white border border-navy-200/80 rounded-3xl p-6 sm:p-8 shadow-xs text-center">
+            <div className="w-12 h-12 rounded-2xl bg-navy-50 border border-navy-200 text-navy-800 flex items-center justify-center mx-auto mb-3">
+              <ShoppingBag className="w-5 h-5 text-navy-800" />
+            </div>
+
+            <span className="text-[10px] uppercase tracking-widest font-sans font-bold text-navy-800 bg-navy-50 border border-navy-200 px-3 py-1 rounded-full inline-block mb-2">
+              Physical Gift Option
+            </span>
+
+            <h3 className="font-serif text-xl sm:text-2xl text-navy-950 font-normal">
+              Home Registry Wishlist
+            </h3>
+
+            <p className="text-stone-600 font-sans text-xs sm:text-sm max-w-lg mx-auto mt-2 mb-5 leading-relaxed">
+              Prefer to bless our new home with a specific household item? We have curated a short wishlist of things we'd love.
+            </p>
+
+            {/* Click to Reveal Wishlist Button */}
+            <button
+              onClick={() => setShowWishlist(!showWishlist)}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-navy-900 hover:bg-navy-800 text-white font-sans font-bold text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-95"
+            >
+              <ShoppingBag className="w-4 h-4 text-amber-300" />
+              <span>{showWishlist ? 'Hide Wishlist' : 'View Home Registry Wishlist (12 Items)'}</span>
+              {showWishlist ? (
+                <ChevronUp className="w-4 h-4" />
+              ) : (
+                <ChevronDown className="w-4 h-4" />
+              )}
+            </button>
+          </div>
+
+          {/* Animated Expandable Wishlist Drawer */}
+          <AnimatePresence>
+            {showWishlist && (
+              <motion.div
+                initial={{ opacity: 0, height: 0, y: -10 }}
+                animate={{ opacity: 1, height: 'auto', y: 0 }}
+                exit={{ opacity: 0, height: 0, y: -10 }}
+                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                className="overflow-hidden mt-6"
+              >
+                <div className="bg-white border-2 border-navy-200/90 rounded-3xl p-6 sm:p-8 md:p-10 shadow-md">
+                  {/* Header inside Wishlist */}
+                  <div className="text-center max-w-2xl mx-auto mb-8">
+                    <h3 className="font-serif text-2xl md:text-3xl text-navy-950 font-normal">
+                      Things We'd Love For Our New Home
+                    </h3>
+                    <p className="text-stone-600 font-sans text-sm md:text-base mt-2 leading-relaxed italic">
+                      “{WEDDING_DETAILS.gifts.wishlistIntro}”
+                    </p>
+                  </div>
+
+                  {/* 12 Wishlist Items Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {WEDDING_DETAILS.gifts.wishlist.map((item) => (
+                      <div
+                        key={item.id}
+                        className="bg-navy-50/40 hover:bg-white border border-navy-150 hover:border-navy-400 rounded-2xl p-4 sm:p-5 transition-all flex items-start justify-between gap-3 shadow-2xs group"
+                      >
+                        <div className="flex items-start gap-3.5">
+                          {/* Item Number Badge */}
+                          <div className="w-8 h-8 rounded-xl bg-navy-900 text-white font-sans font-bold text-xs flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                            {item.id}
+                          </div>
+
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-navy-700 bg-white border border-navy-200 px-2 py-0.5 rounded-md">
+                                {item.brand}
+                              </span>
+                              <span className="text-[10px] font-sans text-stone-500">
+                                {item.category}
+                              </span>
+                            </div>
+
+                            <h4 className="font-serif text-base sm:text-lg text-navy-950 font-semibold leading-snug">
+                              {item.name}
+                            </h4>
+
+                            {item.notes && (
+                              <p className="text-xs text-stone-600 font-sans">
+                                {item.notes}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Copy Button to facilitate shopping */}
+                        <button
+                          onClick={() => handleCopyWishlistItem(item.name + (item.notes ? ` (${item.notes})` : ''), item.id)}
+                          className="shrink-0 p-2 text-navy-700 hover:text-navy-950 bg-white border border-navy-200 hover:border-navy-400 rounded-xl transition-all cursor-pointer shadow-2xs active:scale-95"
+                          title="Copy item name for shopping"
+                        >
+                          {copiedWishlistId === item.id ? (
+                            <Check className="w-4 h-4 text-emerald-600" />
+                          ) : (
+                            <Copy className="w-4 h-4" />
+                          )}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Footnote and close button */}
+                  <div className="mt-8 pt-6 border-t border-navy-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500 font-sans">
+                    <span className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-navy-700 shrink-0" />
+                      <span>Tap the copy icon on any item to copy its name for shopping</span>
+                    </span>
+                    <button
+                      onClick={() => setShowWishlist(false)}
+                      className="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-full font-sans font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
+                    >
+                      Close Wishlist ↑
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </section>
