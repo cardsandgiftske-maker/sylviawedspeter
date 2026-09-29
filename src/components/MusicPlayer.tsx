@@ -95,7 +95,7 @@ export default function MusicPlayer({ shouldPlay }: MusicPlayerProps) {
         id="youtube-bg-player"
         width="1"
         height="1"
-        src={`https://www.youtube.com/embed/jtK-xIM-7tU?enablejsapi=1&autoplay=0&controls=0&loop=1&playlist=jtK-xIM-7tU&origin=${typeof window !== 'undefined' ? encodeURIComponent(window.location.origin) : ''}`}
+        src={`https://www.youtube.com/embed/mNsh7B-v3hA?enablejsapi=1&autoplay=0&controls=0&loop=1&playlist=mNsh7B-v3hA&origin=${typeof window !== 'undefined' ? encodeURIComponent(window.location.origin) : ''}`}
         allow="autoplay; encrypted-media"
         className="fixed -left-10 -top-10 w-[1px] h-[1px] opacity-0 pointer-events-none z-0"
         onLoad={() => setIframeLoaded(true)}
@@ -113,11 +113,11 @@ export default function MusicPlayer({ shouldPlay }: MusicPlayerProps) {
             className="fixed bottom-24 right-6 z-45"
             id="music-control-floating-widget"
           >
-            <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md border border-stone-200/80 rounded-full p-1.5 shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_10px_35px_rgb(0,0,0,0.1)] hover:border-stone-300 transition-all group">
+            <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md border border-navy-200/80 rounded-full p-1.5 shadow-[0_8px_30px_rgb(11,26,48,0.12)] hover:shadow-[0_10px_35px_rgb(11,26,48,0.18)] hover:border-navy-300 transition-all group">
               {/* Spinning / Pulsing Music Visualizer Bar */}
               <button
                 onClick={togglePlay}
-                className="w-10 h-10 rounded-full bg-sage-50 border border-sage-200 flex items-center justify-center text-sage-800 hover:bg-sage-700 hover:text-white transition-all cursor-pointer relative overflow-hidden group/btn"
+                className="w-10 h-10 rounded-full bg-navy-50 border border-navy-200 flex items-center justify-center text-navy-900 hover:bg-navy-900 hover:text-white transition-all cursor-pointer relative overflow-hidden group/btn"
                 title={isPlaying ? "Pause Music" : "Play Music"}
               >
                 {isPlaying ? (
@@ -134,14 +134,14 @@ export default function MusicPlayer({ shouldPlay }: MusicPlayerProps) {
               </button>
 
               {/* Collapsed/Expanded Sound controls */}
-              <div className="flex items-center gap-1.5 pr-3 pl-1 font-serif text-xs font-medium tracking-tight text-stone-700 select-none">
-                <span className="hidden sm:inline-block max-w-[90px] truncate">Wedding Song</span>
+              <div className="flex items-center gap-1.5 pr-3 pl-1 font-serif text-xs font-medium tracking-tight text-navy-950 select-none">
+                <span className="hidden sm:inline-block max-w-[100px] truncate">Wedding Song</span>
                 
-                <div className="w-[1px] h-4 bg-stone-200 mx-1 hidden sm:block" />
+                <div className="w-[1px] h-4 bg-navy-100 mx-1 hidden sm:block" />
 
                 <button
                   onClick={toggleMute}
-                  className="p-1 text-stone-500 hover:text-sage-800 active:scale-90 transition-all cursor-pointer"
+                  className="p-1 text-navy-600 hover:text-navy-950 active:scale-90 transition-all cursor-pointer"
                   title={isMuted ? "Unmute Music" : "Mute Music"}
                 >
                   {isMuted ? (
