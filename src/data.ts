@@ -52,23 +52,16 @@ export const WEDDING_DETAILS = {
     description: 'We invite our guests to celebrate in style — come dressed in your finest colorful, vibrant, and elegant attire for our special day.',
   },
   gifts: {
-    title: 'Wedding Gifts & Registry',
-    message: 'Your presence and prayers as we begin our marriage are more than we could ask for. Should you wish to bless us further, we have provided four thoughtful options below toward our new life together.',
-    wishlistIntro: "For friends and family who have asked about gifts, we've put together a curated wishlist of household items we'd love as we start our home together.",
-    voucher: {
-      title: 'Gift Voucher',
-      subtitle: 'Store & Shopping Voucher',
-      instruction: 'Gift cards or vouchers from any store or supermarket of your choice are warmly appreciated.',
-    },
+    title: 'Wedding Gifts & Blessings',
+    message: 'Your presence and prayers as we begin our marriage are more than we could ask for. Should you wish to bless us further, we gratefully welcome a gift in the form of an envelope or M-Pesa toward our new life together.',
+    wishlistIntro: "For friends and family who have asked about gifts, we've put together a small wishlist of things we'd love as we start our home together.",
     envelope: {
-      title: 'Enveloped Gift',
-      subtitle: 'Traditional Blessing',
+      title: 'Gift in an Envelope',
       instruction: 'A decorated gift envelope drop box will be gracefully stationed at the reception entrance at Tropical Gardens Ruiru-Kimbo for your cards, envelopes, and warm blessings.',
     },
     mpesa: {
-      title: 'Digital Gift',
-      subtitle: 'Mobile Transfer (M-Pesa)',
-      instruction: 'For digital blessings, you are warmly invited to send via M-Pesa to:',
+      title: 'M-Pesa Contribution',
+      instruction: 'For digital blessings, you are warmly invited to send via M-Pesa:',
       recipientName: 'Dr. Peter Kamau / Sylvia Waithira',
       number: '0722 000 000',
       tillNumber: '5849201',
@@ -76,83 +69,90 @@ export const WEDDING_DETAILS = {
     wishlist: [
       {
         id: 1,
+        name: 'Gift Voucher',
+        category: 'Flexible Blessing',
+        brand: 'Any Preferred Store',
+        notes: 'Gift card / voucher from any appliance, electronics, or home store (e.g. Hotpoint, Carrefour, Naivas, Victoria Courts)'
+      },
+      {
+        id: 2,
         name: 'Philips 5000 Series HR3033/00 Blender',
         category: 'Kitchen Appliances',
         brand: 'Philips',
         notes: 'High-speed ProBlend Plus technology blender'
       },
       {
-        id: 2,
+        id: 3,
         name: 'Philips 3000 Series 6.2 L Air Fryer',
         category: 'Kitchen Appliances',
         brand: 'Philips',
         notes: 'Preferably model NA332/09'
       },
       {
-        id: 3,
+        id: 4,
         name: "De'Longhi Dedica EC685 Coffee Maker",
         category: 'Kitchen Appliances',
         brand: "De'Longhi",
         notes: 'Slim espresso machine for morning brew'
       },
       {
-        id: 4,
+        id: 5,
         name: 'Von Electric Pressure Cooker',
         category: 'Kitchen Appliances',
         brand: 'Von',
         notes: 'With stainless steel bowl (or any with stainless steel bowl)'
       },
       {
-        id: 5,
+        id: 6,
         name: 'LG MS2595CIS 25 L NeoChef Solo Microwave',
         category: 'Kitchen Appliances',
         brand: 'LG',
         notes: 'Smart Inverter solo microwave'
       },
       {
-        id: 6,
+        id: 7,
         name: 'Kärcher WD 3 Wet & Dry Vacuum Cleaner',
         category: 'Home & Cleaning',
         brand: 'Kärcher',
         notes: 'Multi-purpose vacuum cleaner'
       },
       {
-        id: 7,
+        id: 8,
         name: 'Sony HT-S20R 5.1-channel Home Cinema Sound System',
         category: 'Living & Entertainment',
         brand: 'Sony',
         notes: 'Dolby Digital 5.1ch surround sound system'
       },
       {
-        id: 8,
+        id: 9,
         name: 'LG 55" 4K UHD Smart TV',
         category: 'Living & Entertainment',
         brand: 'LG',
         notes: '4K Ultra HD Smart Television'
       },
       {
-        id: 9,
+        id: 10,
         name: 'LG Front Load Washing Machine, 10-15 kg',
         category: 'Laundry & Home Care',
         brand: 'LG',
         notes: 'AI DD, Steam, built-in heater, 1400 rpm'
       },
       {
-        id: 10,
+        id: 11,
         name: 'LG Double-Door No-Frost Refrigerator',
         category: 'Kitchen & Cooling',
         brand: 'LG',
         notes: 'No-Frost double door refrigerator'
       },
       {
-        id: 11,
+        id: 12,
         name: 'Philips / Tefal Steam Iron + Ironing Board',
         category: 'Laundry & Home Care',
         brand: 'Philips / Tefal',
         notes: 'Steam iron with sturdy folding ironing board'
       },
       {
-        id: 12,
+        id: 13,
         name: 'Sony 5.1 Channel Sound System',
         category: 'Living & Entertainment',
         brand: 'Sony',
