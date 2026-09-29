@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Clock, Award, Compass, Music, MessageCircle, Gift, Cake, Utensils, Navigation, Heart, Car } from 'lucide-react';
+import { Clock, Award, Compass, Music, MessageCircle, Gift, Cake, Utensils, Navigation, Heart, Car, MapPin, ExternalLink } from 'lucide-react';
 import { PROGRAM_ITEMS } from '../data';
 
 export default function Program() {
@@ -15,7 +15,7 @@ export default function Program() {
   const getIconForTitle = (title: string) => {
     const t = title.toLowerCase();
     if (t.includes('matrimony') || t.includes('mass') || t.includes('church')) return <Award className="w-4 h-4 text-navy-800" />;
-    if (t.includes('drive') || t.includes('journey') || t.includes('transit')) return <Car className="w-4 h-4 text-navy-700" />;
+    if (t.includes('route') || t.includes('drive') || t.includes('journey') || t.includes('transit') || t.includes('scenic')) return <Car className="w-4 h-4 text-navy-700" />;
     if (t.includes('arrival') || t.includes('refreshment')) return <Navigation className="w-4 h-4 text-navy-800" />;
     if (t.includes('lunch') || t.includes('feast') || t.includes('culinary')) return <Utensils className="w-4 h-4 text-[#C49C5E]" />;
     if (t.includes('photo') || t.includes('portrait')) return <Compass className="w-4 h-4 text-navy-800" />;
@@ -130,6 +130,26 @@ export default function Program() {
                       </li>
                     ))}
                   </ul>
+                )}
+
+                {/* Dedicated Route Navigation Action for Scenic Route */}
+                {(item.title.toLowerCase().includes('scenic') || item.title.toLowerCase().includes('route')) && (
+                  <div className="mt-4 pt-3.5 border-t border-navy-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-navy-50/50 p-3 rounded-xl">
+                    <div className="flex items-center gap-2 text-xs font-sans text-navy-900 font-medium">
+                      <MapPin className="w-4 h-4 text-navy-700 shrink-0" />
+                      <span>Via Gatundu - Kiganjo Road (~40–45 min drive)</span>
+                    </div>
+                    <a
+                      href="https://www.google.com/maps/dir/?api=1&origin=Our+Lady+of+the+Holy+Rosary+Kamwangi+Catholic+Church&destination=Tropical+Gardens+Ruiru+Kimbo"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 bg-navy-900 hover:bg-navy-800 text-white rounded-full text-xs font-sans font-bold uppercase tracking-wider shadow-xs hover:shadow-md transition-all active:scale-95 cursor-pointer self-start sm:self-auto"
+                    >
+                      <Navigation className="w-3.5 h-3.5 text-amber-300" />
+                      <span>Open GPS Route</span>
+                      <ExternalLink className="w-3 h-3 text-stone-300" />
+                    </a>
+                  </div>
                 )}
               </div>
             </motion.div>
