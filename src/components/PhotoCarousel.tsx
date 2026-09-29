@@ -14,12 +14,20 @@ import {
   CheckCircle2,
   Lock,
   Unlock,
-  KeyRound,
   Eye,
   EyeOff,
   ShieldCheck,
-  AlertCircle
+  AlertCircle,
+  Cloud,
+  Loader2
 } from 'lucide-react';
+import { 
+  subscribeToCarouselPhotos, 
+  saveCarouselPhoto, 
+  deleteCarouselPhoto, 
+  clearAllCarouselPhotos,
+  CloudCarouselPhoto 
+} from '../lib/firebase';
 
 export interface CarouselPhoto {
   id: string;
@@ -29,10 +37,9 @@ export interface CarouselPhoto {
   isUserUploaded?: boolean;
 }
 
-const STORAGE_KEY = 'sylvia_peter_carousel_uploaded_photos_v2';
 const AUTH_KEY = 'sylvia_peter_admin_auth';
 
-// Helper to compress images so they fit efficiently into browser storage
+// Helper to compress images so they fit efficiently into cloud database storage (under 300KB)
 function compressImage(file: File): Promise<string> {
   return new Promise((resolve) => {
     const reader = new FileReader();
@@ -40,19 +47,19 @@ function compressImage(file: File): Promise<string> {
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 1600;
-        const MAX_HEIGHT = 1200;
+        const MAX_WIDTH = 1280;
+        const MAX_HEIGHT = 960;
         let width = img.width;
         let height = img.height;
 
         if (width > height) {
           if (width > MAX_WIDTH) {
-            height *= MAX_WIDTH / width;
+            height = Math.round((height * MAX_WIDTH) / width);
             width = MAX_WIDTH;
           }
         } else {
           if (height > MAX_HEIGHT) {
-            width *= MAX_HEIGHT / height;
+            width = Math.round((width * MAX_HEIGHT) / height);
             height = MAX_HEIGHT;
           }
         }
@@ -65,7 +72,7 @@ function compressImage(file: File): Promise<string> {
           return;
         }
         ctx.drawImage(img, 0, 0, width, height);
-        resolve(canvas.toDataURL('image/jpeg', 0.88));
+        resolve(canvas.toDataURL('image/jpeg', 0.82));
       };
       img.onerror = () => resolve(e.target?.result as string);
       img.src = e.target?.result as string;
@@ -76,21 +83,9 @@ function compressImage(file: File): Promise<string> {
 }
 
 export default function PhotoCarousel() {
-  // Start with completely blank photos list (no sample photos)
-  const [photos, setPhotos] = useState<CarouselPhoto[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved) as CarouselPhoto[];
-        if (Array.isArray(parsed)) {
-          return parsed;
-        }
-      }
-    } catch (e) {
-      console.error('Failed reading carousel photos:', e);
-    }
-    return [];
-  });
+  const [photos, setPhotos] = useState<CarouselPhoto[]>([]);
+  const [isCloudLoading, setIsCloudLoading] = useState(true);
+  const [isSavingToCloud, setIsSavingToCloud] = useState(false);
 
   // Couple authentication state (private uploading)
   const [isCoupleAuthenticated, setIsCoupleAuthenticated] = useState<boolean>(() => {
@@ -120,6 +115,18 @@ export default function PhotoCarousel() {
   const [showPassword, setShowPassword] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Subscribe to real-time Cloud Firestore updates for carousel photos
+  useEffect(() => {
+    const unsubscribe = subscribeToCarouselPhotos((cloudPhotos: CloudCarouselPhoto[]) => {
+      setPhotos(cloudPhotos);
+      setIsCloudLoading(false);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   // Sync with AdminPanel authentication if already logged in elsewhere
   useEffect(() => {
@@ -277,64 +284,68 @@ export default function PhotoCarousel() {
     }
   };
 
-  const handleConfirmUpload = () => {
+  const handleConfirmUpload = async () => {
     if (pendingUploads.length === 0) return;
 
-    const newPhotos: CarouselPhoto[] = pendingUploads.map((item, idx) => ({
-      id: 'upload-' + Date.now() + '-' + idx,
-      url: item.url,
-      title: uploadCaption.trim() || item.name || 'Wedding Photo',
-      subtitle: `Added by couple on ${new Date().toLocaleDateString('en-KE', { month: 'short', day: 'numeric', year: 'numeric' })}`,
-      isUserUploaded: true,
-    }));
-
-    const updated = [...photos, ...newPhotos];
-    setPhotos(updated);
-
+    setIsSavingToCloud(true);
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-    } catch (e) {
-      console.warn('Storage limit reached or failed:', e);
+      for (let idx = 0; idx < pendingUploads.length; idx++) {
+        const item = pendingUploads[idx];
+        const newPhoto: CloudCarouselPhoto = {
+          id: 'cloud-photo-' + Date.now() + '-' + idx,
+          url: item.url,
+          title: uploadCaption.trim() || item.name || 'Wedding Photo',
+          subtitle: `Added by couple on ${new Date().toLocaleDateString('en-KE', { month: 'short', day: 'numeric', year: 'numeric' })}`,
+          order: photos.length + idx,
+          createdAt: new Date().toISOString(),
+          isUserUploaded: true,
+        };
+
+        // Save to Firebase Cloud Firestore
+        await saveCarouselPhoto(newPhoto);
+      }
+
+      setShowUploadModal(false);
+      setPendingUploads([]);
+      setUploadCaption('');
+      setUploadSuccessToast('Photo(s) saved to cloud storage successfully!');
+      setTimeout(() => setUploadSuccessToast(null), 3500);
+      setCurrentIndex(photos.length);
+    } catch (err) {
+      console.error('Failed to save photos to cloud:', err);
+      setUploadSuccessToast('Upload error. Please try again.');
+      setTimeout(() => setUploadSuccessToast(null), 3000);
+    } finally {
+      setIsSavingToCloud(false);
     }
-
-    setCurrentIndex(updated.length - newPhotos.length);
-    setShowUploadModal(false);
-    setPendingUploads([]);
-    setUploadCaption('');
-
-    setUploadSuccessToast('Photo(s) added to carousel successfully!');
-    setTimeout(() => setUploadSuccessToast(null), 3500);
   };
 
-  const handleDeletePhoto = (id: string, e: React.MouseEvent) => {
+  const handleDeletePhoto = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (!isCoupleAuthenticated) {
       handleInitiateUpload();
       return;
     }
-    if (window.confirm('Delete this photo from the carousel?')) {
-      const filtered = photos.filter(p => p.id !== id);
-      setPhotos(filtered);
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
-      } catch (err) {
-        console.error(err);
-      }
-      if (currentIndex >= filtered.length) {
-        setCurrentIndex(Math.max(0, filtered.length - 1));
+    if (window.confirm('Delete this photo from cloud storage?')) {
+      await deleteCarouselPhoto(id);
+      setUploadSuccessToast('Photo removed from cloud storage.');
+      setTimeout(() => setUploadSuccessToast(null), 2500);
+      if (currentIndex >= photos.length - 1) {
+        setCurrentIndex(Math.max(0, photos.length - 2));
       }
     }
   };
 
-  const handleClearAllPhotos = () => {
+  const handleClearAllPhotos = async () => {
     if (!isCoupleAuthenticated) {
       handleInitiateUpload();
       return;
     }
-    if (window.confirm('Clear all photos and reset the carousel to blank?')) {
-      setPhotos([]);
-      localStorage.removeItem(STORAGE_KEY);
+    if (window.confirm('Clear all photos from cloud storage and reset the carousel?')) {
+      await clearAllCarouselPhotos();
       setCurrentIndex(0);
+      setUploadSuccessToast('All photos removed from cloud storage.');
+      setTimeout(() => setUploadSuccessToast(null), 2500);
     }
   };
 
@@ -363,6 +374,13 @@ export default function PhotoCarousel() {
               <h3 className="font-serif text-lg md:text-xl font-medium text-navy-950 leading-tight">
                 Photo Showcase
               </h3>
+
+              {/* Cloud Storage Status Badge */}
+              <span className="flex items-center gap-1 text-[9px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full font-sans font-bold uppercase tracking-wider">
+                <Cloud className="w-3 h-3 text-emerald-600" />
+                <span>Cloud Stored</span>
+              </span>
+
               {isCoupleAuthenticated && (
                 <span className="flex items-center gap-1 text-[9px] bg-navy-100 text-navy-900 border border-navy-300 px-2 py-0.5 rounded-full font-sans font-bold uppercase tracking-wider">
                   <ShieldCheck className="w-3 h-3 text-navy-700" />
@@ -371,9 +389,13 @@ export default function PhotoCarousel() {
               )}
             </div>
             <p className="text-[11px] font-sans text-stone-500">
-              {photos.length === 0 
-                ? (isCoupleAuthenticated ? 'Upload photos for your wedding carousel' : 'Private wedding photo gallery') 
-                : `${photos.length} photo${photos.length !== 1 ? 's' : ''} in gallery`}
+              {isCloudLoading ? (
+                'Connecting to cloud photo storage...'
+              ) : photos.length === 0 ? (
+                isCoupleAuthenticated ? 'Upload photos to store them in the cloud' : 'Private wedding photo gallery'
+              ) : (
+                `${photos.length} cloud-stored photo${photos.length !== 1 ? 's' : ''} in gallery`
+              )}
             </p>
           </div>
         </div>
@@ -449,149 +471,163 @@ export default function PhotoCarousel() {
               : 'border-navy-200 bg-white hover:bg-navy-50/20 hover:border-navy-400'
           }`}
         >
-          {/* Subtle background gradient glow */}
-          <div className="absolute inset-0 bg-radial-gradient from-navy-900/[0.03] to-transparent pointer-events-none rounded-3xl" />
+          {/* Subtle background pattern */}
+          <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#1B2A4A_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
 
-          {/* Central Private Visual */}
-          <div className="relative mb-4">
-            <div className="w-16 h-16 rounded-full bg-navy-50 border border-navy-200 text-navy-900 flex items-center justify-center shadow-xs group-hover:scale-105 transition-all">
+          <div className="relative z-10 flex flex-col items-center max-w-md mx-auto">
+            <div className="w-16 h-16 rounded-2xl bg-navy-50 border border-navy-200 flex items-center justify-center text-navy-800 mb-4 group-hover:scale-110 transition-transform duration-300 shadow-xs">
               {isCoupleAuthenticated ? (
                 <Upload className="w-7 h-7 text-navy-800" />
               ) : (
-                <Lock className="w-7 h-7 text-navy-900" />
+                <Lock className="w-7 h-7 text-navy-800" />
               )}
             </div>
-            <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-navy-900 text-white flex items-center justify-center shadow-xs">
-              <Sparkles className="w-3 h-3 text-champagne-300" />
+
+            <div className="flex items-center gap-1.5 text-emerald-800 text-xs font-sans font-semibold mb-2 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
+              <Cloud className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Cloud Storage Ready</span>
             </div>
+
+            <h4 className="font-serif text-xl sm:text-2xl text-navy-950 font-medium mb-1.5">
+              {isCoupleAuthenticated ? 'Add Your Wedding Photos' : 'Curated Couple Photos'}
+            </h4>
+
+            <p className="text-stone-500 font-sans text-xs sm:text-sm leading-relaxed mb-4">
+              {isCoupleAuthenticated ? (
+                'Upload celebration moments, engagement portraits, or venue highlights. All photos are saved to your secure cloud database in real time.'
+              ) : (
+                'Private photo showcase for Sylvia & Dr. Peter. Couple members can enter their passcode to upload and manage cloud photos.'
+              )}
+            </p>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleInitiateUpload();
+              }}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-navy-900 hover:bg-navy-800 text-white rounded-full font-sans font-bold text-xs uppercase tracking-wider shadow-md transition-all cursor-pointer"
+            >
+              {isCoupleAuthenticated ? (
+                <>
+                  <Upload className="w-3.5 h-3.5" />
+                  <span>Choose Photos to Cloud Store</span>
+                </>
+              ) : (
+                <>
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>Unlock Couple Upload</span>
+                </>
+              )}
+            </button>
           </div>
-
-          <h4 className="font-serif text-xl sm:text-2xl text-navy-950 font-medium mb-1.5">
-            Sylvia &amp; Dr. Peter's Photo Showcase
-          </h4>
-
-          {isCoupleAuthenticated ? (
-            <>
-              <p className="text-stone-600 font-sans text-xs sm:text-sm max-w-md mx-auto leading-relaxed mb-5">
-                You are in <strong>Couple Admin Mode</strong>. Click here or drag and drop your wedding pictures to add them to the top showcase.
-              </p>
-              <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-navy-900 hover:bg-navy-800 text-white font-sans font-bold text-xs uppercase tracking-wider shadow-sm group-hover:shadow-md transition-all">
-                <Upload className="w-3.5 h-3.5" />
-                <span>Select Photos to Upload</span>
-              </div>
-            </>
-          ) : (
-            <>
-              <p className="text-stone-500 font-sans text-xs sm:text-sm max-w-md mx-auto leading-relaxed mb-5">
-                Photo uploading is private to the couple. Official wedding photographs will be showcased here by Sylvia &amp; Dr. Peter.
-              </p>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-navy-50 hover:bg-navy-100 border border-navy-200 text-navy-900 font-sans font-bold text-xs uppercase tracking-wider transition-all">
-                <KeyRound className="w-3.5 h-3.5 text-navy-700" />
-                <span>Couple Login to Upload</span>
-              </div>
-            </>
-          )}
-
-          <p className="text-[10px] text-navy-800/60 font-sans uppercase tracking-widest mt-4 font-semibold">
-            Private Gallery • Saturday, 12th December 2026
-          </p>
         </div>
       ) : (
-        /* When photos exist: Full interactive carousel */
+        /* Full Rich Carousel View with active photo display */
         <>
           <div
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className="relative w-full aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/10] bg-navy-950 rounded-3xl overflow-hidden shadow-xl border-2 border-navy-800 group"
+            className="relative w-full aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/10] min-h-[300px] rounded-3xl overflow-hidden bg-stone-900 shadow-xl border border-stone-200 group"
           >
-            {/* Animated Image Slide */}
+            {/* Main Active Image with AnimatePresence */}
             <AnimatePresence mode="wait">
-              <motion.div
-                key={currentPhoto.id}
-                initial={{ opacity: 0, scale: 1.04 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.65, ease: 'easeOut' }}
-                className="absolute inset-0 cursor-pointer"
-                onClick={() => setLightboxPhoto(currentPhoto)}
-              >
-                <img
-                  src={currentPhoto.url}
-                  alt={currentPhoto.title}
-                  className="w-full h-full object-cover object-center"
-                />
-                
-                {/* Cinematic Gradient Vignette */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
-                <div className="absolute inset-0 bg-gradient-to-r from-sapphire-950/30 via-transparent to-emerald-950/30 pointer-events-none" />
-              </motion.div>
+              {currentPhoto && (
+                <motion.div
+                  key={currentPhoto.id}
+                  initial={{ opacity: 0, scale: 1.03 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute inset-0"
+                >
+                  <img
+                    src={currentPhoto.url}
+                    alt={currentPhoto.title}
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Elegant Vignette Gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/20 to-stone-950/30" />
+                </motion.div>
+              )}
             </AnimatePresence>
 
-            {/* Top Badges & Actions */}
-            <div className="absolute top-4 inset-x-4 flex items-center justify-between z-20 pointer-events-none">
-              <span className="px-3 py-1 bg-black/50 backdrop-blur-md border border-white/20 text-white font-sans text-[11px] font-bold tracking-wider rounded-full pointer-events-auto">
-                {currentIndex + 1} / {photos.length}
-              </span>
-
-              <div className="flex items-center gap-2 pointer-events-auto">
-                {/* Delete button only visible to authorized couple */}
-                {isCoupleAuthenticated && (
-                  <button
-                    onClick={(e) => handleDeletePhoto(currentPhoto.id, e)}
-                    className="p-2 rounded-full bg-black/40 hover:bg-rose-900/80 backdrop-blur-md border border-white/25 text-white hover:text-rose-200 transition-all cursor-pointer shadow-sm"
-                    title="Remove this photo (Couple Admin)"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                )}
-
-                <button
-                  onClick={() => setLightboxPhoto(currentPhoto)}
-                  className="p-2 rounded-full bg-black/40 hover:bg-black/70 backdrop-blur-md border border-white/25 text-white transition-all cursor-pointer shadow-sm"
-                  title="View Fullscreen"
-                >
-                  <Maximize2 className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Previous Button (if multiple photos) */}
+            {/* Navigation Arrows */}
             {photos.length > 1 && (
               <>
                 <button
                   onClick={handlePrev}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 hover:bg-black/75 backdrop-blur-md border border-white/20 text-white flex items-center justify-center transition-all cursor-pointer z-20 active:scale-95 shadow-lg group-hover:opacity-100 opacity-80"
+                  className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/80 hover:bg-white text-stone-900 flex items-center justify-center shadow-lg backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-105 active:scale-95 z-20 cursor-pointer"
                   title="Previous Photo"
                 >
-                  <ChevronLeft className="w-5 h-5" />
+                  <ChevronLeft className="w-5 h-5 -ml-0.5" />
                 </button>
-
                 <button
                   onClick={handleNext}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 hover:bg-black/75 backdrop-blur-md border border-white/20 text-white flex items-center justify-center transition-all cursor-pointer z-20 active:scale-95 shadow-lg group-hover:opacity-100 opacity-80"
+                  className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/80 hover:bg-white text-stone-900 flex items-center justify-center shadow-lg backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-105 active:scale-95 z-20 cursor-pointer"
                   title="Next Photo"
                 >
-                  <ChevronRight className="w-5 h-5" />
+                  <ChevronRight className="w-5 h-5 -mr-0.5" />
                 </button>
               </>
             )}
 
-            {/* Bottom Title & Subtitle Overlay */}
-            <div className="absolute bottom-3 inset-x-4 z-20 pointer-events-none text-left">
-              <div className="max-w-xl">
-                <h4 className="font-serif text-lg sm:text-2xl text-white font-medium drop-shadow-md leading-snug">
-                  {currentPhoto.title}
-                </h4>
-                {currentPhoto.subtitle && (
-                  <p className="font-sans text-xs sm:text-sm text-stone-200 drop-shadow-sm mt-0.5 line-clamp-2">
-                    {currentPhoto.subtitle}
-                  </p>
-                )}
-              </div>
+            {/* Top Right Quick Actions (Fullscreen & Couple Delete) */}
+            <div className="absolute top-3 sm:top-4 right-3 sm:right-4 flex items-center gap-2 z-20">
+              <button
+                onClick={() => setLightboxPhoto(currentPhoto)}
+                className="p-2 sm:p-2.5 rounded-full bg-stone-900/60 hover:bg-stone-900/90 text-white backdrop-blur-md transition-colors cursor-pointer shadow-md"
+                title="View Fullscreen"
+              >
+                <Maximize2 className="w-4 h-4" />
+              </button>
+
+              {isCoupleAuthenticated && (
+                <button
+                  onClick={(e) => handleDeletePhoto(currentPhoto.id, e)}
+                  className="p-2 sm:p-2.5 rounded-full bg-rose-600/80 hover:bg-rose-600 text-white backdrop-blur-md transition-colors cursor-pointer shadow-md"
+                  title="Delete Photo from Cloud"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              )}
             </div>
+
+            {/* Bottom Caption Overlay */}
+            <div className="absolute bottom-0 inset-x-0 p-4 sm:p-6 text-white text-left z-20 flex flex-col justify-end">
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="text-[10px] uppercase tracking-wider font-sans font-bold bg-white/20 backdrop-blur-md text-amber-200 px-2.5 py-0.5 rounded-full">
+                  Photo {currentIndex + 1} of {photos.length}
+                </span>
+                <span className="flex items-center gap-1 text-[10px] font-sans font-semibold bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 px-2.5 py-0.5 rounded-full backdrop-blur-md">
+                  <Cloud className="w-2.5 h-2.5 text-emerald-400" />
+                  <span>Cloud Database</span>
+                </span>
+              </div>
+              <h4 className="font-serif text-xl sm:text-2xl md:text-3xl font-normal drop-shadow-sm text-white">
+                {currentPhoto.title}
+              </h4>
+              {currentPhoto.subtitle && (
+                <p className="text-stone-300 text-xs sm:text-sm font-sans mt-0.5 line-clamp-1">
+                  {currentPhoto.subtitle}
+                </p>
+              )}
+            </div>
+
+            {/* Progress indicator bar on autoplay */}
+            {isPlaying && photos.length > 1 && !isHovered && (
+              <div className="absolute top-0 inset-x-0 h-1 bg-white/10 z-20">
+                <motion.div
+                  key={currentIndex}
+                  initial={{ width: '0%' }}
+                  animate={{ width: '100%' }}
+                  transition={{ duration: 4.5, ease: 'linear' }}
+                  className="h-full bg-amber-400"
+                />
+              </div>
+            )}
           </div>
 
-          {/* Thumbnails Navigation Row */}
+          {/* Thumbnails Navigation Strip */}
           <div className="flex items-center justify-center gap-2 mt-3 overflow-x-auto py-1 px-2 no-scrollbar">
             {photos.map((photo, idx) => (
               <button
@@ -616,7 +652,7 @@ export default function PhotoCarousel() {
               <button
                 onClick={handleInitiateUpload}
                 className="w-10 sm:w-12 h-8 rounded-xl border border-dashed border-emerald-500/60 bg-emerald-50/50 hover:bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 transition-colors cursor-pointer shadow-2xs"
-                title="Upload another photo"
+                title="Upload another photo to cloud"
               >
                 <Upload className="w-3.5 h-3.5" />
               </button>
@@ -723,11 +759,12 @@ export default function PhotoCarousel() {
               </button>
 
               <div className="text-center mb-4">
-                <span className="text-[10px] uppercase tracking-widest font-sans font-bold text-navy-800 bg-navy-50 border border-navy-200 px-3 py-1 rounded-full">
-                  Wedding Photo Showcase
+                <span className="flex items-center justify-center gap-1.5 text-[10px] uppercase tracking-widest font-sans font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full mx-auto w-fit">
+                  <Cloud className="w-3 h-3 text-emerald-600" />
+                  <span>Cloud Database Storage</span>
                 </span>
                 <h3 className="font-serif text-2xl text-navy-950 font-medium mt-2">
-                  {pendingUploads.length === 1 ? 'Preview & Add Photo' : `Add ${pendingUploads.length} Photos`}
+                  {pendingUploads.length === 1 ? 'Preview & Cloud Store Photo' : `Cloud Store ${pendingUploads.length} Photos`}
                 </h3>
               </div>
 
@@ -758,18 +795,29 @@ export default function PhotoCarousel() {
               <div className="flex items-center gap-3">
                 <button
                   type="button"
+                  disabled={isSavingToCloud}
                   onClick={() => { setShowUploadModal(false); setPendingUploads([]); }}
-                  className="flex-1 py-3 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl font-sans font-bold text-xs uppercase tracking-wider cursor-pointer"
+                  className="flex-1 py-3 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl font-sans font-bold text-xs uppercase tracking-wider cursor-pointer disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
+                  disabled={isSavingToCloud}
                   onClick={handleConfirmUpload}
-                  className="flex-1 py-3 bg-navy-900 hover:bg-navy-800 text-white rounded-xl font-sans font-bold text-xs uppercase tracking-wider shadow-md cursor-pointer flex items-center justify-center gap-1.5"
+                  className="flex-1 py-3 bg-navy-900 hover:bg-navy-800 text-white rounded-xl font-sans font-bold text-xs uppercase tracking-wider shadow-md cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-75"
                 >
-                  <CheckCircle2 className="w-4 h-4 text-white" />
-                  <span>Add to Carousel</span>
+                  {isSavingToCloud ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                      <span>Saving to Cloud...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Cloud className="w-4 h-4 text-white" />
+                      <span>Save to Cloud</span>
+                    </>
+                  )}
                 </button>
               </div>
             </div>
@@ -781,18 +829,18 @@ export default function PhotoCarousel() {
       <AnimatePresence>
         {uploadSuccessToast && (
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-stone-900 border border-emerald-400 text-white px-5 py-2.5 rounded-full shadow-2xl flex items-center gap-2 text-xs font-sans font-medium"
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-navy-950 text-white px-5 py-3 rounded-full shadow-2xl flex items-center gap-2.5 border border-navy-800 text-xs sm:text-sm font-sans"
           >
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <Cloud className="w-4 h-4 text-emerald-400" />
             <span>{uploadSuccessToast}</span>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Fullscreen Lightbox Modal */}
+      {/* Lightbox Modal */}
       <AnimatePresence>
         {lightboxPhoto && (
           <motion.div
@@ -800,32 +848,34 @@ export default function PhotoCarousel() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setLightboxPhoto(null)}
-            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 select-none"
+            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-8"
           >
             <button
               onClick={() => setLightboxPhoto(null)}
-              className="absolute top-6 right-6 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer z-50"
-              title="Close Fullscreen"
+              className="absolute top-4 right-4 p-3 text-white/80 hover:text-white rounded-full bg-white/10 hover:bg-white/20 transition-colors z-10 cursor-pointer"
             >
               <X className="w-6 h-6" />
             </button>
 
-            <div
+            <motion.div
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative max-w-5xl max-h-[85vh] w-full flex flex-col items-center"
+              className="max-w-5xl max-h-[90vh] flex flex-col items-center"
             >
               <img
                 src={lightboxPhoto.url}
                 alt={lightboxPhoto.title}
-                className="max-h-[75vh] w-auto object-contain rounded-2xl shadow-2xl border border-white/20"
+                className="max-w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl"
               />
               <div className="mt-4 text-center text-white">
-                <h4 className="font-serif text-2xl font-medium">{lightboxPhoto.title}</h4>
+                <h4 className="font-serif text-2xl font-light">{lightboxPhoto.title}</h4>
                 {lightboxPhoto.subtitle && (
-                  <p className="font-sans text-xs text-stone-300 mt-1">{lightboxPhoto.subtitle}</p>
+                  <p className="text-stone-400 text-xs sm:text-sm font-sans mt-1">{lightboxPhoto.subtitle}</p>
                 )}
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
