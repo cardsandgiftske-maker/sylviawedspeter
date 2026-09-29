@@ -130,17 +130,17 @@ export default function AdminPanel() {
   return (
     <>
       {/* Small floating admin entry trigger in the page footer */}
-      <div className="py-10 bg-stone-900 flex justify-center border-t border-stone-950 text-stone-100 font-sans text-xs select-none">
+      <div className="py-10 bg-navy-950 flex justify-center border-t border-navy-900 text-stone-100 font-sans text-xs select-none">
         <div className="flex flex-col items-center gap-2">
           <p className="text-stone-300">© 2026 Sylvia &amp; Dr. Peter. All rights reserved.</p>
           <button
             onClick={() => setIsOpen(true)}
-            className="text-stone-100 hover:text-white font-medium transition-all flex items-center gap-1.5 cursor-pointer text-[11px] bg-stone-800 hover:bg-stone-750 px-3.5 py-2 rounded-full border border-stone-700/60 shadow-md active:scale-95"
+            className="text-stone-100 hover:text-white font-medium transition-all flex items-center gap-1.5 cursor-pointer text-[11px] bg-navy-900 hover:bg-navy-850 px-3.5 py-2 rounded-full border border-navy-700 shadow-md active:scale-95"
             title="Password-Protected Couple Admin Panel"
           >
-            <Shield className="w-3.5 h-3.5 text-sapphire-400" />
+            <Shield className="w-3.5 h-3.5 text-navy-300" />
             <span>Couple Admin Portal</span>
-            <span className="text-[9px] bg-stone-950 text-emerald-300 border border-emerald-800/40 px-1.5 py-0.5 rounded-full font-mono text-[8px] font-bold tracking-wider uppercase">Secured</span>
+            <span className="text-[9px] bg-navy-950 text-emerald-300 border border-emerald-800/40 px-1.5 py-0.5 rounded-full font-mono text-[8px] font-bold tracking-wider uppercase">Secured</span>
           </button>
         </div>
       </div>
@@ -156,16 +156,16 @@ export default function AdminPanel() {
           >
             <div className="bg-white border border-stone-200 rounded-3xl w-full max-w-4xl shadow-2xl overflow-hidden relative flex flex-col my-8 max-h-[90vh]">
               {/* Header */}
-              <div className="border-b border-stone-100 p-6 flex items-center justify-between">
+              <div className="border-b border-navy-100 p-6 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-sapphire-50 flex items-center justify-center text-sapphire-700">
+                  <div className="w-10 h-10 rounded-full bg-navy-50 flex items-center justify-center text-navy-800">
                     <Shield className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="font-serif text-xl text-stone-900 font-medium">Admin Guest Manager</h3>
+                      <h3 className="font-serif text-xl text-navy-950 font-medium">Admin Guest Manager</h3>
                       {isFirebaseConfigured ? (
-                        <span className="flex items-center gap-1 text-[8px] text-emerald-800 bg-emerald-50 border border-emerald-200/50 px-1.5 py-0.5 rounded font-sans font-bold uppercase tracking-wider">
+                        <span className="flex items-center gap-1 text-[8px] text-navy-900 bg-navy-50 border border-navy-200 px-1.5 py-0.5 rounded font-sans font-bold uppercase tracking-wider">
                           Cloud Live
                         </span>
                       ) : (
@@ -188,11 +188,11 @@ export default function AdminPanel() {
               {/* Login authentication overlay if not authenticated */}
               {!isAuthenticated ? (
                 <div className="p-12 flex flex-col items-center justify-center text-center max-w-sm mx-auto space-y-6">
-                  <div className="w-16 h-16 rounded-full bg-sapphire-50 flex items-center justify-center text-sapphire-700 animate-pulse">
+                  <div className="w-16 h-16 rounded-full bg-navy-50 flex items-center justify-center text-navy-800 animate-pulse">
                     <Key className="w-8 h-8" />
                   </div>
                   <div className="space-y-2">
-                    <h4 className="font-serif text-lg text-stone-900 font-medium">Passcode Required</h4>
+                    <h4 className="font-serif text-lg text-navy-950 font-medium">Passcode Required</h4>
                     <p className="text-xs text-stone-500">Exclusively for Sylvia &amp; Dr. Peter to access guest attendance records.</p>
                   </div>
 
@@ -204,7 +204,7 @@ export default function AdminPanel() {
                         placeholder="Enter Admin Passcode"
                         value={passcode}
                         onChange={(e) => setPasscode(e.target.value)}
-                        className="w-full bg-stone-50 border border-stone-200 focus:border-sapphire-700 rounded-xl pl-4 pr-11 py-3 text-sm text-stone-800 outline-none transition-colors text-center"
+                        className="w-full bg-navy-50/40 border border-navy-150 focus:border-navy-800 rounded-xl pl-4 pr-11 py-3 text-sm text-stone-900 outline-none transition-colors text-center"
                       />
                       <button
                         type="button"
@@ -221,7 +221,7 @@ export default function AdminPanel() {
 
                     <button
                       type="submit"
-                      className="w-full py-3 bg-sapphire-800 hover:bg-sapphire-900 text-white font-sans font-bold uppercase tracking-wider text-xs rounded-xl shadow-md transition-all cursor-pointer"
+                      className="w-full py-3 bg-navy-900 hover:bg-navy-800 text-white font-sans font-bold uppercase tracking-wider text-xs rounded-xl shadow-md transition-all cursor-pointer"
                     >
                       Authenticate Access
                     </button>
