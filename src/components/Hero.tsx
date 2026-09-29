@@ -11,58 +11,56 @@ interface TimeLeft {
   hours: number;
   minutes: number;
   seconds: number;
-  isPassed: boolean;
 }
 
 export default function Hero() {
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-    isPassed: false,
-  });
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
     const calculateTimeLeft = () => {
-      const now = new Date().getTime();
-      const difference = WEDDING_DATE.getTime() - now;
-
-      if (difference <= 0) {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isPassed: true });
-        return;
+      const difference = +WEDDING_DATE - +new Date();
+      if (difference > 0) {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((difference / 1000 / 60) % 60),
+          seconds: Math.floor((difference / 1000) % 60),
+        });
       }
-
-      setTimeLeft({
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60),
-        isPassed: false,
-      });
     };
 
     calculateTimeLeft();
     const timer = setInterval(calculateTimeLeft, 1000);
-
     return () => clearInterval(timer);
   }, []);
 
-  const verses = WEDDING_DETAILS.bibleVerses.slice(0, 3);
+  const verses = [
+    {
+      text: 'Therefore what God has joined together, let no one separate.',
+      reference: 'Mark 10:9 (NIV)',
+    },
+    {
+      text: 'And over all these virtues put on love, which binds them all together in perfect unity.',
+      reference: 'Colossians 3:14 (NIV)',
+    },
+    {
+      text: 'Two are better than one, because they have a good return for their labor.',
+      reference: 'Ecclesiastes 4:9 (NIV)',
+    },
+  ];
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#FAF9F6] text-stone-850 py-16" id="hero-section">
-      {/* Background Image with Warm Paper Vignette/Overlay */}
-      <div className="absolute inset-0 z-0">
+    <section className="relative min-h-[92vh] flex items-center justify-center pt-8 pb-16 overflow-hidden" id="hero-section">
+      {/* Background with couple image and elegant navy/white gradient overlay */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <img
           src={sylviaPeterImg}
-          alt="Sylvia & Dr. Peter Kamau Wedding Celebration"
-          className="w-full h-full object-cover object-center opacity-[0.22] scale-105 filter brightness-[1.02] contrast-[0.98]"
+          alt="Sylvia and Dr. Peter"
+          className="w-full h-full object-cover object-center opacity-[0.2] scale-105 filter brightness-[1.02] contrast-[0.98]"
           referrerPolicy="no-referrer"
         />
-        {/* Gradients tailored to Shades of Blue, Green & Champagne */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#FAF9F6] via-[#FAF9F6]/85 to-[#FAF9F6]/40" />
-        <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#FAF9F6]/45 to-[#FAF9F6]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#FAFBFD] via-[#FAFBFD]/85 to-[#FAFBFD]/40" />
+        <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#FAFBFD]/50 to-[#FAFBFD]" />
       </div>
 
       <div className="container relative z-10 mx-auto px-4 flex flex-col items-center text-center max-w-4xl pt-4">
@@ -79,37 +77,37 @@ export default function Hero() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="max-w-2xl mx-auto mb-5 bg-white/80 backdrop-blur-xs border border-champagne-300/70 rounded-3xl px-6 py-4 shadow-xs"
+          className="max-w-2xl mx-auto mb-5 bg-white/95 border border-navy-150 rounded-3xl px-6 py-4 shadow-xs"
         >
-          <p className="text-sapphire-800 font-sans tracking-[0.2em] text-[10px] md:text-xs uppercase font-extrabold mb-1.5">
+          <p className="text-navy-800 font-sans tracking-[0.25em] text-[10px] md:text-xs uppercase font-extrabold mb-1.5">
             {WEDDING_DETAILS.families.leadIn}
           </p>
           <div className="text-stone-800 font-serif text-xs md:text-sm leading-relaxed">
             <p>
-              <span className="font-semibold text-stone-900">{WEDDING_DETAILS.families.groomFamily}</span>
+              <span className="font-semibold text-navy-950">{WEDDING_DETAILS.families.groomFamily}</span>
               <span className="text-[11px] font-sans text-stone-500 font-medium ml-1.5">(Groom’s Family)</span>
             </p>
             <p className="text-champagne-600 font-serif italic text-sm my-0.5">&amp;</p>
             <p>
-              <span className="font-semibold text-stone-900">{WEDDING_DETAILS.families.brideFamily}</span>
+              <span className="font-semibold text-navy-950">{WEDDING_DETAILS.families.brideFamily}</span>
               <span className="text-[11px] font-sans text-stone-500 font-medium ml-1.5">(Bride’s Family)</span>
             </p>
           </div>
-          <p className="text-emerald-800 font-serif text-xs md:text-sm mt-2 italic font-medium">
+          <p className="text-navy-900 font-serif text-xs md:text-sm mt-2 italic font-medium">
             Joyfully invite you to witness and celebrate the Holy Matrimony and wedding reception of their beloved children
           </p>
         </motion.div>
 
-        {/* Main Title: Sylvia & Dr. Peter */}
+        {/* Main Title: Sylvia & Dr. Peter in Navy Blue & Gold */}
         <motion.h1
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-display font-light tracking-tight text-stone-900 mb-2"
+          className="text-5xl md:text-7xl lg:text-8xl font-display font-light tracking-tight text-navy-950 mb-2"
         >
-          <span className="block mb-1 md:inline md:mb-0 text-sapphire-900 font-medium">Sylvia</span>
+          <span className="block mb-1 md:inline md:mb-0 text-navy-950 font-normal">Sylvia</span>
           <span className="font-display font-light text-champagne-500 mx-3 md:mx-4 text-4xl md:text-6xl italic">&amp;</span>
-          <span className="block mt-1 md:inline md:mt-0 text-emerald-850 font-medium">Dr. Peter</span>
+          <span className="block mt-1 md:inline md:mt-0 text-navy-900 font-normal">Dr. Peter</span>
         </motion.h1>
 
         {/* Full Names Subtitle */}
@@ -122,25 +120,25 @@ export default function Hero() {
           Sylvia Waithira Muchiri &amp; Dr. Peter Kamau Mwangi
         </motion.p>
 
-        {/* Date, Time & Venue Key Badges */}
+        {/* Date, Time & Venue Key Badges in Navy & White */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.7 }}
-          className="flex flex-wrap items-center justify-center gap-2.5 px-6 py-3 bg-white/90 border border-emerald-200/90 rounded-full text-stone-850 text-xs md:text-sm font-sans font-semibold tracking-wider uppercase mb-8 shadow-xs"
+          className="flex flex-wrap items-center justify-center gap-2.5 px-6 py-3 bg-white/95 border border-navy-200 rounded-full text-stone-850 text-xs md:text-sm font-sans font-semibold tracking-wider uppercase mb-8 shadow-xs"
         >
-          <div className="flex items-center gap-1.5 text-sapphire-800">
-            <Calendar className="w-4 h-4 text-sapphire-600" />
+          <div className="flex items-center gap-1.5 text-navy-900">
+            <Calendar className="w-4 h-4 text-navy-700" />
             <span>Saturday, 12th December 2026</span>
           </div>
-          <span className="w-1.5 h-1.5 rounded-full bg-stone-300 hidden sm:inline-block" />
-          <div className="flex items-center gap-1.5 text-emerald-800">
-            <Clock className="w-4 h-4 text-emerald-600" />
+          <span className="w-1.5 h-1.5 rounded-full bg-navy-200 hidden sm:inline-block" />
+          <div className="flex items-center gap-1.5 text-navy-900">
+            <Clock className="w-4 h-4 text-navy-700" />
             <span>10:00 AM at Kamwangi Church</span>
           </div>
-          <span className="w-1.5 h-1.5 rounded-full bg-stone-300 hidden sm:inline-block" />
-          <div className="flex items-center gap-1.5 text-ocean-800">
-            <MapPin className="w-4 h-4 text-ocean-600" />
+          <span className="w-1.5 h-1.5 rounded-full bg-navy-200 hidden sm:inline-block" />
+          <div className="flex items-center gap-1.5 text-navy-800">
+            <MapPin className="w-4 h-4 text-navy-600" />
             <span>1:00 PM at Tropical Gardens</span>
           </div>
         </motion.div>
@@ -155,12 +153,12 @@ export default function Hero() {
           {verses.map((verse, idx) => (
             <div
               key={`hero-verse-${idx}`}
-              className="bg-white/90 border border-stone-200/90 rounded-2xl p-4 md:p-5 flex flex-col justify-between text-center shadow-xs hover:border-emerald-300 transition-all"
+              className="bg-white border border-navy-100 rounded-2xl p-4 md:p-5 flex flex-col justify-between text-center shadow-xs hover:border-navy-300 transition-all"
             >
               <p className="font-serif italic text-stone-800 text-sm md:text-base leading-relaxed mb-3">
                 “{verse.text}”
               </p>
-              <p className="text-sapphire-700 font-sans text-[11px] font-bold tracking-widest uppercase not-italic">
+              <p className="text-navy-800 font-sans text-[11px] font-bold tracking-widest uppercase not-italic">
                 — {verse.reference}
               </p>
             </div>
@@ -180,26 +178,26 @@ export default function Hero() {
           
           <div className="flex gap-3 md:gap-4 text-center">
             {/* Days block */}
-            <div className="flex flex-col bg-white border border-stone-200/80 rounded-xl px-4 py-3 min-w-[70px] md:min-w-[90px] shadow-xs">
-              <span className="text-2xl md:text-4xl font-serif font-light text-sapphire-800">{timeLeft.days}</span>
+            <div className="flex flex-col bg-white border border-navy-150 rounded-2xl px-4 py-3 min-w-[70px] md:min-w-[90px] shadow-xs">
+              <span className="text-2xl md:text-4xl font-serif font-light text-navy-950">{timeLeft.days}</span>
               <span className="text-[10px] uppercase tracking-wider text-stone-500 font-sans mt-1">Days</span>
             </div>
 
             {/* Hours block */}
-            <div className="flex flex-col bg-white border border-stone-200/80 rounded-xl px-4 py-3 min-w-[70px] md:min-w-[90px] shadow-xs">
-              <span className="text-2xl md:text-4xl font-serif font-light text-sapphire-800">{timeLeft.hours}</span>
+            <div className="flex flex-col bg-white border border-navy-150 rounded-2xl px-4 py-3 min-w-[70px] md:min-w-[90px] shadow-xs">
+              <span className="text-2xl md:text-4xl font-serif font-light text-navy-950">{timeLeft.hours}</span>
               <span className="text-[10px] uppercase tracking-wider text-stone-500 font-sans mt-1">Hours</span>
             </div>
 
             {/* Minutes block */}
-            <div className="flex flex-col bg-white border border-stone-200/80 rounded-xl px-4 py-3 min-w-[70px] md:min-w-[90px] shadow-xs">
-              <span className="text-2xl md:text-4xl font-serif font-light text-sapphire-800">{timeLeft.minutes}</span>
+            <div className="flex flex-col bg-white border border-navy-150 rounded-2xl px-4 py-3 min-w-[70px] md:min-w-[90px] shadow-xs">
+              <span className="text-2xl md:text-4xl font-serif font-light text-navy-950">{timeLeft.minutes}</span>
               <span className="text-[10px] uppercase tracking-wider text-stone-500 font-sans mt-1">Mins</span>
             </div>
 
             {/* Seconds block */}
-            <div className="flex flex-col bg-white border border-stone-200/80 rounded-xl px-4 py-3 min-w-[70px] md:min-w-[90px] shadow-xs">
-              <span className="text-2xl md:text-4xl font-serif font-light text-sapphire-800">{timeLeft.seconds}</span>
+            <div className="flex flex-col bg-white border border-navy-150 rounded-2xl px-4 py-3 min-w-[70px] md:min-w-[90px] shadow-xs">
+              <span className="text-2xl md:text-4xl font-serif font-light text-navy-950">{timeLeft.seconds}</span>
               <span className="text-[10px] uppercase tracking-wider text-stone-500 font-sans mt-1">Secs</span>
             </div>
           </div>
@@ -208,7 +206,7 @@ export default function Hero() {
       </div>
 
       {/* Subtle fade overlay */}
-      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#FAF9F6] to-transparent pointer-events-none" />
+      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#FAFBFD] to-transparent pointer-events-none" />
     </section>
   );
 }
