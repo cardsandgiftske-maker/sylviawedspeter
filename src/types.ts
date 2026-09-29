@@ -25,3 +25,11 @@ export interface ColorSwatch {
   textColor: string;
   description: string;
 }
+
+export interface WishlistItem {
+  id: number;
+  name: string;
+  category: string;
+  brand: string;
+  notes?: string;
+}
