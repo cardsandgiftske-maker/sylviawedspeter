@@ -17,9 +17,9 @@
           "type": "string",
           "description": "Short descriptive title of the moment or venue"
         },
-        "caption": {
+        "subtitle": {
           "type": "string",
-          "description": "Optional caption or story behind the photo"
+          "description": "Optional subtitle"
         },
         "order": {
           "type": "number",
@@ -29,9 +29,9 @@
           "type": "string",
           "description": "ISO timestamp of when the photo was added"
         },
-        "isDefault": {
+        "isUserUploaded": {
           "type": "boolean",
-          "description": "Whether this is one of the initial curated photos"
+          "description": "Whether this is uploaded by the couple"
         }
       },
       "required": ["id", "url", "title", "createdAt"]
@@ -49,32 +49,37 @@
           "type": "string",
           "description": "Full name of the attending guest"
         },
-        "phone": {
+        "phoneNumber": {
           "type": "string",
           "description": "Guest phone number"
         },
-        "attending": {
-          "type": "boolean",
-          "description": "Whether the guest is attending"
+        "willAttend": {
+          "type": "string",
+          "enum": ["yes", "no"],
+          "description": "Whether the guest will attend"
         },
-        "guestCount": {
+        "adultsCount": {
           "type": "number",
-          "description": "Total seats reserved (1 or 2)"
+          "description": "Number of adults"
         },
-        "dietary": {
+        "childrenCount": {
+          "type": "number",
+          "description": "Number of children"
+        },
+        "eCardCode": {
           "type": "string",
-          "description": "Dietary requirements or preferences"
+          "description": "Admittance e-card code"
         },
-        "wishes": {
+        "notes": {
           "type": "string",
-          "description": "Warm wishes for the bride and groom"
+          "description": "Dietary or congratulatory notes"
         },
-        "createdAt": {
+        "submittedAt": {
           "type": "string",
           "description": "ISO timestamp of RSVP submission"
         }
       },
-      "required": ["id", "fullName", "phone", "attending", "guestCount", "createdAt"]
+      "required": ["id", "fullName", "phoneNumber", "willAttend", "submittedAt"]
     }
   },
   "firestore": {
