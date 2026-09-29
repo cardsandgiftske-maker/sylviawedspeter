@@ -15,7 +15,8 @@ import {
   EyeOff, 
   ShieldCheck, 
   AlertCircle, 
-  Loader2 
+  Loader2,
+  Lock
 } from 'lucide-react';
 import { 
   subscribeToCarouselPhotos, 
@@ -407,14 +408,32 @@ export default function PhotoCarousel() {
                 <Maximize2 className="w-3.5 h-3.5" />
               </button>
 
-              {isCoupleAuthenticated && (
+              {/* Discreet Couple Access Trigger */}
+              {!isCoupleAuthenticated ? (
                 <button
-                  onClick={(e) => handleDeletePhoto(currentPhoto.id, e)}
-                  className="p-2 sm:p-2.5 rounded-full bg-rose-600/80 hover:bg-rose-600 text-white backdrop-blur-md transition-colors cursor-pointer shadow-md"
-                  title="Delete Photo"
+                  onClick={() => setShowAuthModal(true)}
+                  className="p-2 sm:p-2.5 rounded-full bg-stone-900/40 hover:bg-stone-900/80 text-white/50 hover:text-white backdrop-blur-md transition-colors cursor-pointer shadow-md"
+                  title="Couple Access"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
+                  <Lock className="w-3.5 h-3.5" />
                 </button>
+              ) : (
+                <>
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="p-2 sm:p-2.5 rounded-full bg-navy-900/80 hover:bg-navy-900 text-white backdrop-blur-md transition-colors cursor-pointer shadow-md"
+                    title="Add Photo to Cloud"
+                  >
+                    <Upload className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={(e) => handleDeletePhoto(currentPhoto.id, e)}
+                    className="p-2 sm:p-2.5 rounded-full bg-rose-600/80 hover:bg-rose-600 text-white backdrop-blur-md transition-colors cursor-pointer shadow-md"
+                    title="Delete Photo"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </>
               )}
             </div>
 
