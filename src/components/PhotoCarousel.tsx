@@ -355,17 +355,17 @@ export default function PhotoCarousel() {
       {/* Top Header Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-3.5 px-2">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-sapphire-50 border border-sapphire-200 flex items-center justify-center text-sapphire-800">
+          <div className="w-8 h-8 rounded-full bg-navy-50 border border-navy-200 flex items-center justify-center text-navy-800">
             <ImageIcon className="w-4 h-4" />
           </div>
           <div className="text-left">
             <div className="flex items-center gap-2">
-              <h3 className="font-serif text-lg md:text-xl font-medium text-stone-900 leading-tight">
+              <h3 className="font-serif text-lg md:text-xl font-medium text-navy-950 leading-tight">
                 Photo Showcase
               </h3>
               {isCoupleAuthenticated && (
-                <span className="flex items-center gap-1 text-[9px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full font-sans font-bold uppercase tracking-wider">
-                  <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                <span className="flex items-center gap-1 text-[9px] bg-navy-100 text-navy-900 border border-navy-300 px-2 py-0.5 rounded-full font-sans font-bold uppercase tracking-wider">
+                  <ShieldCheck className="w-3 h-3 text-navy-700" />
                   <span>Couple Mode</span>
                 </span>
               )}
@@ -394,7 +394,7 @@ export default function PhotoCarousel() {
 
               <button
                 onClick={() => setIsPlaying(!isPlaying)}
-                className="p-2 rounded-full bg-white hover:bg-stone-50 border border-stone-200 text-stone-600 hover:text-stone-900 shadow-2xs transition-colors cursor-pointer"
+                className="p-2 rounded-full bg-white hover:bg-navy-50 border border-navy-200 text-navy-800 hover:text-navy-950 shadow-2xs transition-colors cursor-pointer"
                 title={isPlaying ? 'Pause Auto-slide' : 'Play Auto-slide'}
               >
                 {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
@@ -407,7 +407,7 @@ export default function PhotoCarousel() {
             <div className="flex items-center gap-1.5">
               <button
                 onClick={handleInitiateUpload}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-sapphire-800 to-emerald-800 hover:from-sapphire-900 hover:to-emerald-900 text-white font-sans font-bold text-xs uppercase tracking-wider rounded-full shadow-md active:scale-95 transition-all cursor-pointer"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-navy-900 hover:bg-navy-800 text-white font-sans font-bold text-xs uppercase tracking-wider rounded-full shadow-md active:scale-95 transition-all cursor-pointer"
                 title="Upload photo(s)"
               >
                 <Upload className="w-3.5 h-3.5" />
@@ -415,7 +415,7 @@ export default function PhotoCarousel() {
               </button>
               <button
                 onClick={handleLockPrivateMode}
-                className="p-2 rounded-full bg-white hover:bg-rose-50 border border-stone-200 text-stone-500 hover:text-rose-600 shadow-2xs transition-colors cursor-pointer"
+                className="p-2 rounded-full bg-white hover:bg-rose-50 border border-navy-200 text-stone-500 hover:text-rose-600 shadow-2xs transition-colors cursor-pointer"
                 title="Lock Private Mode"
               >
                 <Unlock className="w-3.5 h-3.5" />
@@ -424,10 +424,10 @@ export default function PhotoCarousel() {
           ) : (
             <button
               onClick={handleInitiateUpload}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-stone-100 hover:bg-stone-200 border border-stone-250 text-stone-700 font-sans font-bold text-xs uppercase tracking-wider rounded-full shadow-2xs transition-all cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-navy-50 hover:bg-navy-100 border border-navy-200 text-navy-900 font-sans font-bold text-xs uppercase tracking-wider rounded-full shadow-2xs transition-all cursor-pointer"
               title="Private couple upload portal"
             >
-              <Lock className="w-3.5 h-3.5 text-sapphire-700" />
+              <Lock className="w-3.5 h-3.5 text-navy-700" />
               <span>Couple Upload</span>
             </button>
           )}
@@ -444,29 +444,29 @@ export default function PhotoCarousel() {
           className={`relative w-full aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/10] min-h-[260px] rounded-3xl border-2 transition-all duration-300 flex flex-col items-center justify-center p-6 text-center cursor-pointer group shadow-xs overflow-hidden ${
             isCoupleAuthenticated
               ? (isDragging 
-                  ? 'border-emerald-500 bg-emerald-50/60 scale-[1.01] border-dashed' 
-                  : 'border-dashed border-emerald-400/80 bg-white hover:bg-emerald-50/20')
-              : 'border-stone-250 bg-white/80 hover:bg-white hover:border-sapphire-300'
+                  ? 'border-navy-500 bg-navy-50/60 scale-[1.01] border-dashed' 
+                  : 'border-dashed border-navy-400 bg-white hover:bg-navy-50/30')
+              : 'border-navy-200 bg-white hover:bg-navy-50/20 hover:border-navy-400'
           }`}
         >
           {/* Subtle background gradient glow */}
-          <div className="absolute inset-0 bg-radial-gradient from-sapphire-500/[0.03] to-transparent pointer-events-none rounded-3xl" />
+          <div className="absolute inset-0 bg-radial-gradient from-navy-900/[0.03] to-transparent pointer-events-none rounded-3xl" />
 
           {/* Central Private Visual */}
           <div className="relative mb-4">
-            <div className="w-16 h-16 rounded-full bg-sapphire-50/80 border border-sapphire-200/80 text-sapphire-800 flex items-center justify-center shadow-xs group-hover:scale-105 transition-all">
+            <div className="w-16 h-16 rounded-full bg-navy-50 border border-navy-200 text-navy-900 flex items-center justify-center shadow-xs group-hover:scale-105 transition-all">
               {isCoupleAuthenticated ? (
-                <Upload className="w-7 h-7 text-emerald-700" />
+                <Upload className="w-7 h-7 text-navy-800" />
               ) : (
-                <Lock className="w-7 h-7 text-sapphire-800" />
+                <Lock className="w-7 h-7 text-navy-900" />
               )}
             </div>
-            <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-emerald-700 text-white flex items-center justify-center shadow-xs">
+            <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-navy-900 text-white flex items-center justify-center shadow-xs">
               <Sparkles className="w-3 h-3 text-champagne-300" />
             </div>
           </div>
 
-          <h4 className="font-serif text-xl sm:text-2xl text-stone-900 font-medium mb-1.5">
+          <h4 className="font-serif text-xl sm:text-2xl text-navy-950 font-medium mb-1.5">
             Sylvia &amp; Dr. Peter's Photo Showcase
           </h4>
 
@@ -475,7 +475,7 @@ export default function PhotoCarousel() {
               <p className="text-stone-600 font-sans text-xs sm:text-sm max-w-md mx-auto leading-relaxed mb-5">
                 You are in <strong>Couple Admin Mode</strong>. Click here or drag and drop your wedding pictures to add them to the top showcase.
               </p>
-              <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-sans font-bold text-xs uppercase tracking-wider shadow-sm group-hover:shadow-md transition-all">
+              <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-navy-900 hover:bg-navy-800 text-white font-sans font-bold text-xs uppercase tracking-wider shadow-sm group-hover:shadow-md transition-all">
                 <Upload className="w-3.5 h-3.5" />
                 <span>Select Photos to Upload</span>
               </div>
@@ -485,14 +485,14 @@ export default function PhotoCarousel() {
               <p className="text-stone-500 font-sans text-xs sm:text-sm max-w-md mx-auto leading-relaxed mb-5">
                 Photo uploading is private to the couple. Official wedding photographs will be showcased here by Sylvia &amp; Dr. Peter.
               </p>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-stone-100 hover:bg-sapphire-50 border border-stone-250 hover:border-sapphire-300 text-stone-700 hover:text-sapphire-900 font-sans font-bold text-xs uppercase tracking-wider transition-all">
-                <KeyRound className="w-3.5 h-3.5 text-sapphire-700" />
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-navy-50 hover:bg-navy-100 border border-navy-200 text-navy-900 font-sans font-bold text-xs uppercase tracking-wider transition-all">
+                <KeyRound className="w-3.5 h-3.5 text-navy-700" />
                 <span>Couple Login to Upload</span>
               </div>
             </>
           )}
 
-          <p className="text-[10px] text-stone-400 font-sans uppercase tracking-widest mt-4">
+          <p className="text-[10px] text-navy-800/60 font-sans uppercase tracking-widest mt-4 font-semibold">
             Private Gallery • Saturday, 12th December 2026
           </p>
         </div>
@@ -502,7 +502,7 @@ export default function PhotoCarousel() {
           <div
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className="relative w-full aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/10] bg-stone-900 rounded-3xl overflow-hidden shadow-xl border-2 border-emerald-900/20 group"
+            className="relative w-full aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/10] bg-navy-950 rounded-3xl overflow-hidden shadow-xl border-2 border-navy-800 group"
           >
             {/* Animated Image Slide */}
             <AnimatePresence mode="wait">
@@ -642,15 +642,15 @@ export default function PhotoCarousel() {
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="w-14 h-14 rounded-2xl bg-sapphire-50 border border-sapphire-200 flex items-center justify-center mx-auto mb-4 text-sapphire-800 shadow-xs">
+              <div className="w-14 h-14 rounded-2xl bg-navy-50 border border-navy-200 flex items-center justify-center mx-auto mb-4 text-navy-900 shadow-xs">
                 <Lock className="w-7 h-7" />
               </div>
 
-              <span className="text-[10px] uppercase tracking-widest font-sans font-bold text-sapphire-800 bg-sapphire-50 border border-sapphire-200 px-3 py-1 rounded-full">
+              <span className="text-[10px] uppercase tracking-widest font-sans font-bold text-navy-800 bg-navy-50 border border-navy-200 px-3 py-1 rounded-full">
                 Couple Private Portal
               </span>
 
-              <h3 className="font-serif text-2xl text-stone-900 font-medium mt-3 mb-1">
+              <h3 className="font-serif text-2xl text-navy-950 font-medium mt-3 mb-1">
                 Private Photo Upload
               </h3>
               <p className="text-xs text-stone-500 leading-relaxed mb-5">
@@ -665,12 +665,12 @@ export default function PhotoCarousel() {
                     placeholder="Enter Couple Passcode"
                     value={passcodeInput}
                     onChange={(e) => setPasscodeInput(e.target.value)}
-                    className="w-full bg-stone-50 border border-stone-200 focus:border-sapphire-700 rounded-xl pl-4 pr-11 py-3 text-sm text-stone-900 text-center outline-none transition-colors"
+                    className="w-full bg-navy-50/30 border border-navy-200 focus:border-navy-800 rounded-xl pl-4 pr-11 py-3 text-sm text-stone-900 text-center outline-none transition-colors"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-3.5 text-stone-400 hover:text-stone-700 transition-colors cursor-pointer"
+                    className="absolute right-3.5 top-3.5 text-stone-400 hover:text-navy-900 transition-colors cursor-pointer"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -693,7 +693,7 @@ export default function PhotoCarousel() {
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 py-3 bg-sapphire-800 hover:bg-sapphire-900 text-white rounded-xl font-sans font-bold text-xs uppercase tracking-wider shadow-md cursor-pointer flex items-center justify-center gap-1.5"
+                    className="flex-1 py-3 bg-navy-900 hover:bg-navy-800 text-white rounded-xl font-sans font-bold text-xs uppercase tracking-wider shadow-md cursor-pointer flex items-center justify-center gap-1.5"
                   >
                     <Unlock className="w-3.5 h-3.5" />
                     <span>Unlock</span>
@@ -723,10 +723,10 @@ export default function PhotoCarousel() {
               </button>
 
               <div className="text-center mb-4">
-                <span className="text-[10px] uppercase tracking-widest font-sans font-bold text-sapphire-800 bg-sapphire-50 border border-sapphire-200 px-3 py-1 rounded-full">
+                <span className="text-[10px] uppercase tracking-widest font-sans font-bold text-navy-800 bg-navy-50 border border-navy-200 px-3 py-1 rounded-full">
                   Wedding Photo Showcase
                 </span>
-                <h3 className="font-serif text-2xl text-stone-900 font-medium mt-2">
+                <h3 className="font-serif text-2xl text-navy-950 font-medium mt-2">
                   {pendingUploads.length === 1 ? 'Preview & Add Photo' : `Add ${pendingUploads.length} Photos`}
                 </h3>
               </div>
@@ -750,7 +750,7 @@ export default function PhotoCarousel() {
                   placeholder="e.g. Sylvia & Dr. Peter Celebration"
                   value={uploadCaption}
                   onChange={(e) => setUploadCaption(e.target.value)}
-                  className="w-full bg-stone-50 border border-stone-200 focus:border-sapphire-600 rounded-xl px-4 py-2.5 text-sm text-stone-800 outline-none"
+                  className="w-full bg-stone-50 border border-stone-200 focus:border-navy-700 rounded-xl px-4 py-2.5 text-sm text-stone-800 outline-none"
                 />
               </div>
 
@@ -766,9 +766,9 @@ export default function PhotoCarousel() {
                 <button
                   type="button"
                   onClick={handleConfirmUpload}
-                  className="flex-1 py-3 bg-sapphire-800 hover:bg-sapphire-900 text-white rounded-xl font-sans font-bold text-xs uppercase tracking-wider shadow-md cursor-pointer flex items-center justify-center gap-1.5"
+                  className="flex-1 py-3 bg-navy-900 hover:bg-navy-800 text-white rounded-xl font-sans font-bold text-xs uppercase tracking-wider shadow-md cursor-pointer flex items-center justify-center gap-1.5"
                 >
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <CheckCircle2 className="w-4 h-4 text-white" />
                   <span>Add to Carousel</span>
                 </button>
               </div>
