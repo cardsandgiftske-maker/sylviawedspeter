@@ -41,23 +41,23 @@ export default function Crest({ size = 'md', animated = true }: CrestProps) {
 
   const CrestContent = (
     <div className={`relative flex items-center justify-center ${sizeClasses[size]} select-none`} id="wedding-crest-container">
-      {/* Delicate Champagne Gold / Emerald & Sapphire Glow Effect */}
-      <div className="absolute inset-x-4 inset-y-2 rounded-full bg-emerald-200/40 blur-2xl" />
+      {/* Delicate Navy & Pearl Glow Effect */}
+      <div className="absolute inset-x-4 inset-y-2 rounded-full bg-navy-200/40 blur-2xl" />
 
       <svg
         viewBox="0 0 200 180"
-        className="absolute inset-0 w-full h-full text-sapphire-800"
+        className="absolute inset-0 w-full h-full text-navy-900"
         fill="none"
         id="wedding-crest-svg"
       >
-        {/* Monogram Letters (S & P for Sylvia & Peter) with Interlocking Wedding Rings between them */}
+        {/* Monogram Letters (S & P for Sylvia & Peter) with Interlocking Wedding Rings between them in Navy & Gold */}
         {animated ? (
           <motion.g variants={textVariants}>
             <text
               x="50"
               y="98"
               textAnchor="middle"
-              className="font-serif font-bold select-none fill-current text-sapphire-900"
+              className="font-serif font-bold select-none fill-current text-navy-950"
               style={{ fontSize: '58px' }}
             >
               S
@@ -79,7 +79,7 @@ export default function Crest({ size = 'md', animated = true }: CrestProps) {
               x="150"
               y="98"
               textAnchor="middle"
-              className="font-serif font-bold select-none fill-current text-emerald-800"
+              className="font-serif font-bold select-none fill-current text-navy-900"
               style={{ fontSize: '58px' }}
             >
               P
@@ -91,7 +91,7 @@ export default function Crest({ size = 'md', animated = true }: CrestProps) {
               x="50"
               y="98"
               textAnchor="middle"
-              className="font-serif font-bold select-none fill-current text-sapphire-900"
+              className="font-serif font-bold select-none fill-current text-navy-950"
               style={{ fontSize: '58px' }}
             >
               S
@@ -113,7 +113,7 @@ export default function Crest({ size = 'md', animated = true }: CrestProps) {
               x="150"
               y="98"
               textAnchor="middle"
-              className="font-serif font-bold select-none fill-current text-emerald-800"
+              className="font-serif font-bold select-none fill-current text-navy-900"
               style={{ fontSize: '58px' }}
             >
               P
