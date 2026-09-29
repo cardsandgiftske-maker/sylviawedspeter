@@ -391,8 +391,8 @@ export default function RsvpForm() {
                         <h4 className="font-serif text-2xl font-normal text-navy-950 tracking-tight">
                           Sylvia &amp; Dr. Peter
                         </h4>
-                        <p className="text-[9px] font-serif italic text-stone-500 mt-0.5 leading-tight">
-                          Families of Mr &amp; Mrs Francis Mwangi Kamau and Late Mr Charles Muchiri Njau &amp; Mrs Lucy Wanjiku Muchiri
+                        <p className="text-[9px] font-serif italic text-stone-600 mt-0.5 leading-tight">
+                          The families of Mr &amp; Mrs Francis Mwangi Kamau &amp; Late Mr Charles Muchiri Njau &amp; Mrs Lucy Wanjiku Muchiri
                         </p>
                       </div>
 
@@ -400,7 +400,7 @@ export default function RsvpForm() {
                       <div className="my-3 relative rounded-2xl overflow-hidden border border-navy-200 shadow-2xs">
                         <img
                           src={portraitImg}
-                          alt="Sylvia & Dr. Peter Kamau Mwangi Wedding Portrait"
+                          alt="Sylvia & Dr. Peter Wedding Portrait"
                           className="w-full h-44 object-cover object-top"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-navy-950/75 via-transparent to-transparent flex items-end p-2.5">
