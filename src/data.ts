@@ -259,8 +259,8 @@ export const PROGRAM_ITEMS: ProgramItem[] = [
     description: 'High-energy celebratory entrance with traditional songs and dancing, followed by parental blessings and toasts.',
     bullets: [
       'Joyful Grand Entrance of Sylvia & Dr. Peter',
-      'Speeches by Mr & Mrs Francis Mwangi Kamau (Groom’s Family)',
-      'Speeches by Mrs Lucy Wanjiku Muchiri & Family (Bride’s Family)',
+      'Speeches and blessings by Groom’s Parents',
+      'Speeches and blessings by Bride’s Parents & Family',
       'Tributes from Best Couple & Special Friends',
     ],
     isChurch: false,
