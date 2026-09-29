@@ -1,0 +1,94 @@
+{
+  "entities": {
+    "carouselPhoto": {
+      "title": "Carousel Photo",
+      "description": "A wedding gallery photo displayed in the hero carousel",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the photo"
+        },
+        "url": {
+          "type": "string",
+          "description": "Image data URL or cloud storage URL"
+        },
+        "title": {
+          "type": "string",
+          "description": "Short descriptive title of the moment or venue"
+        },
+        "caption": {
+          "type": "string",
+          "description": "Optional caption or story behind the photo"
+        },
+        "order": {
+          "type": "number",
+          "description": "Display order index in carousel"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp of when the photo was added"
+        },
+        "isDefault": {
+          "type": "boolean",
+          "description": "Whether this is one of the initial curated photos"
+        }
+      },
+      "required": ["id", "url", "title", "createdAt"]
+    },
+    "rsvpGuest": {
+      "title": "RSVP Guest",
+      "description": "Guest RSVP confirmation and details",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the RSVP"
+        },
+        "fullName": {
+          "type": "string",
+          "description": "Full name of the attending guest"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Guest phone number"
+        },
+        "attending": {
+          "type": "boolean",
+          "description": "Whether the guest is attending"
+        },
+        "guestCount": {
+          "type": "number",
+          "description": "Total seats reserved (1 or 2)"
+        },
+        "dietary": {
+          "type": "string",
+          "description": "Dietary requirements or preferences"
+        },
+        "wishes": {
+          "type": "string",
+          "description": "Warm wishes for the bride and groom"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp of RSVP submission"
+        }
+      },
+      "required": ["id", "fullName", "phone", "attending", "guestCount", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/carousel_photos/{photoId}": {
+      "schema": {
+        "$ref": "#/entities/carouselPhoto"
+      },
+      "description": "Cloud-stored photos for the wedding carousel gallery"
+    },
+    "/rsvps/{rsvpId}": {
+      "schema": {
+        "$ref": "#/entities/rsvpGuest"
+      },
+      "description": "Guest RSVP submissions"
+    }
+  }
+}
