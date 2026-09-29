@@ -105,7 +105,7 @@ export default function RsvpForm() {
         childrenCount: willAttend === 'yes' ? childrenCount : 0,
         submittedAt: new Date().toISOString(),
         eCardCode: generateInvitationCode(),
-        notes: notes.trim() || undefined,
+        notes: notes.trim(),
       };
 
       // Save to Firebase (with transparent localStorage fallback inside)
