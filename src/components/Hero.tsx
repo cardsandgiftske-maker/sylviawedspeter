@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Calendar, Clock, MapPin } from 'lucide-react';
+import { Calendar, Clock } from 'lucide-react';
 import { WEDDING_DATE, WEDDING_DETAILS } from '../data';
 import Crest from './Crest';
 import PhotoCarousel from './PhotoCarousel';
@@ -67,14 +67,14 @@ export default function Hero() {
         {/* Photo Uploading Carousel at the Top of Hero Page */}
         <PhotoCarousel />
 
-        {/* Elegant Crest at the top of the hero */}
-        <div className="mb-4">
+        {/* Elegant Crest with Calligraphy Font at the top of the hero */}
+        <div className="mb-3">
           <Crest size="md" animated={true} />
         </div>
 
         {/* Family Names & Formal Invitation Lead-In */}
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
+          initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
           className="max-w-2xl mx-auto mb-5 bg-white/95 border border-navy-150 rounded-3xl px-6 py-4 shadow-xs"
@@ -83,18 +83,16 @@ export default function Hero() {
             {WEDDING_DETAILS.families.leadIn}
           </p>
           <div className="text-stone-800 font-serif text-xs md:text-sm leading-relaxed">
-            <p>
-              <span className="font-semibold text-navy-950">{WEDDING_DETAILS.families.groomFamily}</span>
-              <span className="text-[11px] font-sans text-stone-500 font-medium ml-1.5">(Groom’s Family)</span>
+            <p className="font-semibold text-navy-950">
+              {WEDDING_DETAILS.families.groomFamily}
             </p>
             <p className="text-champagne-600 font-serif italic text-sm my-0.5">&amp;</p>
-            <p>
-              <span className="font-semibold text-navy-950">{WEDDING_DETAILS.families.brideFamily}</span>
-              <span className="text-[11px] font-sans text-stone-500 font-medium ml-1.5">(Bride’s Family)</span>
+            <p className="font-semibold text-navy-950">
+              {WEDDING_DETAILS.families.brideFamily}
             </p>
           </div>
           <p className="text-navy-900 font-serif text-xs md:text-sm mt-2 italic font-medium">
-            Joyfully invite you to witness and celebrate the Holy Matrimony and wedding reception of their beloved children
+            Joyfully invite you to witness and celebrate the Holy Matrimony uniting their children
           </p>
         </motion.div>
 
@@ -103,43 +101,28 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-display font-light tracking-tight text-navy-950 mb-2"
+          className="text-5xl md:text-7xl lg:text-8xl font-display font-light tracking-tight text-navy-950 mb-6"
         >
           <span className="block mb-1 md:inline md:mb-0 text-navy-950 font-normal">Sylvia</span>
           <span className="font-display font-light text-champagne-500 mx-3 md:mx-4 text-4xl md:text-6xl italic">&amp;</span>
           <span className="block mt-1 md:inline md:mt-0 text-navy-900 font-normal">Dr. Peter</span>
         </motion.h1>
 
-        {/* Full Names Subtitle */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="font-serif text-stone-600 text-sm md:text-base tracking-widest uppercase mb-6 font-medium"
-        >
-          Sylvia Waithira Muchiri &amp; Dr. Peter Kamau Mwangi
-        </motion.p>
-
-        {/* Date, Time & Venue Key Badges in Navy & White */}
+        {/* Date & Ceremony Schedule Badge (Venues Removed from Hero Page) */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
-          className="flex flex-wrap items-center justify-center gap-2.5 px-6 py-3 bg-white/95 border border-navy-200 rounded-full text-stone-850 text-xs md:text-sm font-sans font-semibold tracking-wider uppercase mb-8 shadow-xs"
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="flex flex-wrap items-center justify-center gap-3 px-6 py-2.5 bg-white/95 border border-navy-200 rounded-full text-stone-850 text-xs md:text-sm font-sans font-semibold tracking-wider uppercase mb-8 shadow-xs"
         >
-          <div className="flex items-center gap-1.5 text-navy-900">
+          <div className="flex items-center gap-2 text-navy-950 font-bold">
             <Calendar className="w-4 h-4 text-navy-700" />
             <span>Saturday, 12th December 2026</span>
           </div>
-          <span className="w-1.5 h-1.5 rounded-full bg-navy-200 hidden sm:inline-block" />
-          <div className="flex items-center gap-1.5 text-navy-900">
-            <Clock className="w-4 h-4 text-navy-700" />
-            <span>10:00 AM at Kamwangi Church</span>
-          </div>
-          <span className="w-1.5 h-1.5 rounded-full bg-navy-200 hidden sm:inline-block" />
-          <div className="flex items-center gap-1.5 text-navy-800">
-            <MapPin className="w-4 h-4 text-navy-600" />
-            <span>1:00 PM at Tropical Gardens</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-navy-300 hidden sm:inline-block" />
+          <div className="flex items-center gap-1.5 text-navy-800 font-medium">
+            <Clock className="w-4 h-4 text-navy-600" />
+            <span>Nuptial Mass begins at 10:00 AM</span>
           </div>
         </motion.div>
 
