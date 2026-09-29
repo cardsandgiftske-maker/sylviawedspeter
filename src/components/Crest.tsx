@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Upload } from 'lucide-react';
 import defaultCrestImg from '../assets/images/sp_wreath_crest_1790681210706.jpg';
 
 interface CrestProps {
@@ -9,31 +8,15 @@ interface CrestProps {
 }
 
 export default function Crest({ size = 'md', animated = true }: CrestProps) {
-  const [customCrest, setCustomCrest] = useState<string | null>(null);
   const [transparentImg, setTransparentImg] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Load custom crest from localStorage if previously uploaded
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem('sylvia_peter_custom_crest');
-      if (stored) {
-        setCustomCrest(stored);
-      }
-    } catch {
-      // Ignore localStorage errors
-    }
-  }, []);
-
-  const imageToDisplay = customCrest || defaultCrestImg;
 
   // Background removal: dynamically process pixels on an offscreen canvas
-  // to remove all background (white/off-white) and output a 100% transparent PNG with NO shadow or backlight
+  // to ensure 100% transparent PNG with NO shadow, NO backlight, and NO background
   useEffect(() => {
     let isCancelled = false;
     const img = new Image();
     img.crossOrigin = 'anonymous';
-    img.src = imageToDisplay;
+    img.src = defaultCrestImg;
 
     img.onload = () => {
       if (isCancelled) return;
@@ -74,26 +57,7 @@ export default function Crest({ size = 'md', animated = true }: CrestProps) {
     return () => {
       isCancelled = true;
     };
-  }, [imageToDisplay]);
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const result = event.target?.result as string;
-        if (result) {
-          setCustomCrest(result);
-          try {
-            localStorage.setItem('sylvia_peter_custom_crest', result);
-          } catch {
-            // Storage quota fallback
-          }
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  }, []);
 
   // Proportional sizing for the 1:1 circular crest
   const sizeClasses = {
@@ -115,15 +79,15 @@ export default function Crest({ size = 'md', animated = true }: CrestProps) {
     },
   };
 
-  // Pure crest artwork with zero backlight, zero shadow, zero background
+  // Pure crest artwork with zero backlight, zero shadow, zero background, and no image upload controls
   const CrestContent = (
     <div
-      className={`relative group flex items-center justify-center ${sizeClasses[size]} select-none my-1 bg-transparent`}
+      className={`relative flex items-center justify-center ${sizeClasses[size]} select-none my-1 bg-transparent`}
       id="wedding-crest-container"
     >
       <div className="relative w-full h-full flex items-center justify-center p-2 bg-transparent">
         <img
-          src={transparentImg || imageToDisplay}
+          src={transparentImg || defaultCrestImg}
           alt="Sylvia & Dr. Peter Wedding Crest"
           className="w-full h-full object-contain bg-transparent border-0 outline-none select-none pointer-events-none"
           style={{
@@ -133,42 +97,6 @@ export default function Crest({ size = 'md', animated = true }: CrestProps) {
           }}
         />
       </div>
-
-      {/* Hidden file input to allow selecting exact local image */}
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileUpload}
-        accept="image/*"
-        className="hidden"
-      />
-
-      {/* Subtle hover upload badge for replacing or fine-tuning the crest image */}
-      <button
-        onClick={() => fileInputRef.current?.click()}
-        type="button"
-        className="absolute -bottom-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-y-0 translate-y-1 bg-white hover:bg-stone-50 text-stone-700 hover:text-navy-950 border border-stone-200 text-[10px] font-sans font-semibold px-3 py-1 rounded-full flex items-center gap-1.5 cursor-pointer z-20 shadow-xs"
-        title="Upload or change crest image"
-      >
-        <Upload className="w-3 h-3 text-champagne-600" />
-        <span>Change Crest Image</span>
-      </button>
-
-      {/* Reset button if custom crest is set */}
-      {customCrest && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setCustomCrest(null);
-            localStorage.removeItem('sylvia_peter_custom_crest');
-          }}
-          type="button"
-          className="absolute -top-2 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-white text-stone-500 hover:text-red-600 border border-stone-200 rounded-full p-1 text-[10px] z-20"
-          title="Reset to default crest"
-        >
-          ✕
-        </button>
-      )}
     </div>
   );
 
