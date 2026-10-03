@@ -31,19 +31,44 @@ export default function Program() {
   const [qrDataUrl, setQrDataUrl] = useState<string>('');
   const [isGeneratingQr, setIsGeneratingQr] = useState<boolean>(true);
 
+  // Helper to generate the exact deep-link URL for scanning
   const getProgrammeUrl = () => {
     if (typeof window !== 'undefined') {
-      const base = window.location.origin + window.location.pathname;
-      return base.replace(/\/$/, '') + '#program-section';
+      const origin = window.location.origin;
+      const pathname = window.location.pathname.replace(/\/$/, '');
+      // Using query parameter + hash for maximum mobile browser compatibility
+      return `${origin}${pathname}/?section=program#program-section`;
     }
-    return 'https://ais-pre-b47vgsimmxxv7t7srqzibv-351758827303.europe-west2.run.app/#program-section';
+    return 'https://ais-pre-b47vgsimmxxv7t7srqzibv-351758827303.europe-west2.run.app/?section=program#program-section';
   };
 
+  // Auto-scroll when guest opens page directly via QR Code scan
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const section = urlParams.get('section');
+      const hash = window.location.hash;
+
+      if (section === 'program' || hash === '#program-section') {
+        const timer = setTimeout(() => {
+          const el = document.getElementById('program-section');
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 300); // Slight delay allows React DOM to finish mounting
+
+        return () => clearTimeout(timer);
+      }
+    }
+  }, []);
+
+  // Generate QR Code data URL on component mount
   useEffect(() => {
     const url = getProgrammeUrl();
     setIsGeneratingQr(true);
+    
     QRCode.toDataURL(url, {
-      width: 700,
+      width: 800,
       margin: 2,
       color: {
         dark: '#0F2444',
@@ -73,7 +98,7 @@ export default function Program() {
     if (!finalUrl) {
       try {
         finalUrl = await QRCode.toDataURL(getProgrammeUrl(), {
-          width: 700,
+          width: 800,
           margin: 2,
           color: { dark: '#0F2444', light: '#FFFFFF' },
           errorCorrectionLevel: 'H',
@@ -269,7 +294,7 @@ export default function Program() {
                 Wedding Programme QR Code
               </h4>
               <p className="text-xs text-stone-600 font-sans mt-0.5 max-w-md">
-                Guests can scan this code to follow the order of events on their phones. Download the high-res PNG for church bulletins or table cards.
+                Guests can scan this code to jump directly to the live schedule on their phones. Download the high-res PNG for church bulletins or table cards.
               </p>
             </div>
           </div>
@@ -320,7 +345,7 @@ export default function Program() {
                 Wedding Programme QR Code
               </h3>
               <p className="text-xs text-stone-600 font-sans mt-1 mb-5">
-                Scan with any smartphone camera to open the live schedule directly.
+                Scan with any smartphone camera to navigate directly to the live schedule.
               </p>
 
               {/* QR Code Container */}
