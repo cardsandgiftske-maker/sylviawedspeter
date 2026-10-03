@@ -109,29 +109,46 @@ export default function Gifts() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-[10px] uppercase tracking-wider text-stone-400 font-sans font-bold">
-                      Account / Recipient
+                      Paybill
                     </p>
-                    <p className="text-sm font-serif font-semibold text-navy-950">
-                      {WEDDING_DETAILS.gifts.mpesa.recipientName}
+                    <p className="font-mono text-base font-bold text-navy-950">
+                      {WEDDING_DETAILS.gifts.mpesa.paybill}
                     </p>
                   </div>
+                  <button
+                    onClick={() => handleCopy(WEDDING_DETAILS.gifts.mpesa.paybill, 'paybill')}
+                    className="px-3 py-1.5 bg-white hover:bg-navy-50 border border-navy-200 text-xs font-sans font-bold rounded-lg text-navy-800 flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs active:scale-95"
+                    title="Copy Paybill Number"
+                  >
+                    {copiedType === 'paybill' ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>Copy</span>
+                      </>
+                    )}
+                  </button>
                 </div>
 
                 <div className="pt-2 border-t border-navy-150 flex items-center justify-between">
                   <div>
                     <p className="text-[10px] uppercase tracking-wider text-stone-400 font-sans font-bold">
-                      M-Pesa Number
+                      Account Number
                     </p>
-                    <p className="font-mono text-sm font-bold text-navy-900">
-                      {WEDDING_DETAILS.gifts.mpesa.number}
+                    <p className="font-mono text-base font-bold text-navy-950">
+                      {WEDDING_DETAILS.gifts.mpesa.accountNumber}
                     </p>
                   </div>
                   <button
-                    onClick={() => handleCopy(WEDDING_DETAILS.gifts.mpesa.number, 'phone')}
+                    onClick={() => handleCopy(WEDDING_DETAILS.gifts.mpesa.accountNumber, 'account')}
                     className="px-3 py-1.5 bg-white hover:bg-navy-50 border border-navy-200 text-xs font-sans font-bold rounded-lg text-navy-800 flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs active:scale-95"
-                    title="Copy Phone Number"
+                    title="Copy Account Number"
                   >
-                    {copiedType === 'phone' ? (
+                    {copiedType === 'account' ? (
                       <>
                         <Check className="w-3.5 h-3.5 text-emerald-600" />
                         <span>Copied!</span>
@@ -199,17 +216,7 @@ export default function Gifts() {
                 className="overflow-hidden mt-6"
               >
                 <div className="bg-white border-2 border-navy-200/90 rounded-3xl p-6 sm:p-8 md:p-10 shadow-md">
-                  {/* Header inside Wishlist */}
-                  <div className="text-center max-w-2xl mx-auto mb-8">
-                    <h3 className="font-serif text-2xl md:text-3xl text-navy-950 font-normal">
-                      Things We'd Love For Our New Home
-                    </h3>
-                    <p className="text-stone-600 font-sans text-sm md:text-base mt-2 leading-relaxed italic">
-                      “{WEDDING_DETAILS.gifts.wishlistIntro}”
-                    </p>
-                  </div>
-
-                  {/* 12 Wishlist Items Grid */}
+                  {/* Wishlist Items Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {WEDDING_DETAILS.gifts.wishlist.map((item) => (
                       <div
