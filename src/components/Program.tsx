@@ -18,10 +18,9 @@ import {
   Download,
   Copy,
   Check,
-  X,
-  Share2
+  X
 } from 'lucide-react';
-import QRCode from 'qrcode';
+import * as QRCode from 'qrcode';
 import { PROGRAM_ITEMS } from '../data';
 
 export default function Program() {
@@ -156,7 +155,7 @@ export default function Program() {
               transition={{ duration: 0.4, delay: index * 0.04 }}
               className="relative"
             >
-              {/* Timeline Node in Navy */}
+              {/* Timeline Node */}
               <div className="absolute -left-[45px] md:-left-[61px] top-1.5 w-9 h-9 rounded-full bg-white border-2 border-navy-900 flex items-center justify-center shadow-xs z-10">
                 {getIconForTitle(item.title)}
               </div>
@@ -194,7 +193,7 @@ export default function Program() {
                   </p>
                 )}
 
-                {/* Bullets if available */}
+                {/* Bullets */}
                 {item.bullets && item.bullets.length > 0 && (
                   <ul className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs text-stone-600 font-sans">
                     {item.bullets.map((b, bIdx) => (
@@ -206,7 +205,7 @@ export default function Program() {
                   </ul>
                 )}
 
-                {/* Dedicated Route Navigation Action for Scenic Route */}
+                {/* Dedicated Route Navigation Action */}
                 {(item.title.toLowerCase().includes('scenic') || item.title.toLowerCase().includes('route')) && (
                   <div className="mt-4 pt-3.5 border-t border-navy-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-navy-50/50 p-3 rounded-xl">
                     <div className="flex items-center gap-2 text-xs font-sans text-navy-900 font-medium">
@@ -280,7 +279,6 @@ export default function Program() {
               transition={{ duration: 0.2 }}
               className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-navy-200 relative text-center"
             >
-              {/* Close Button */}
               <button
                 onClick={() => setShowQrModal(false)}
                 className="absolute top-4 right-4 p-2 text-stone-400 hover:text-navy-900 hover:bg-navy-50 rounded-full transition-colors cursor-pointer"
