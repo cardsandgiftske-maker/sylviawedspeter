@@ -394,13 +394,7 @@ export default function Program() {
                     </>
                   )}
                 </button>
-              </div>
-
-              <p className="text-[11px] text-stone-500 font-sans mt-4 italic">
-                Tip: Perfect for church bulletin inserts, reception welcome signage, and table place cards.
-              </p>
-            </motion.div>
-          </div>
+        
         )}
       </AnimatePresence>
     </section>
