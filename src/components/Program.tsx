@@ -275,40 +275,8 @@ export default function Program() {
           ))}
         </div>
 
-        {/* QR Code Quick Banner Card */}
-        <div className="mt-14 bg-white border border-navy-200/90 rounded-3xl p-6 sm:p-7 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-5">
-          <div className="flex items-center gap-4 text-center sm:text-left">
-            <div className="w-16 h-16 rounded-2xl bg-navy-50 border border-navy-200 p-2 flex items-center justify-center shrink-0 shadow-2xs">
-              {qrDataUrl ? (
-                <img
-                  src={qrDataUrl}
-                  alt="Programme QR Code Preview"
-                  className="w-full h-full object-contain rounded-lg"
-                />
-              ) : (
-                <Loader2 className="w-6 h-6 text-navy-700 animate-spin" />
-              )}
-            </div>
-            <div>
-              <h4 className="font-serif text-lg text-navy-950 font-semibold">
-                Wedding Programme QR Code
-              </h4>
-              <p className="text-xs text-stone-600 font-sans mt-0.5 max-w-md">
-                Guests can scan this code to jump directly to the live schedule on their phones. Download the high-res PNG for church bulletins or table cards.
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={() => setShowQrModal(true)}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-navy-900 hover:bg-navy-800 text-white rounded-full text-xs font-sans font-bold uppercase tracking-wider shadow-md hover:shadow-lg transition-all cursor-pointer shrink-0 active:scale-95"
-          >
-            <QrCode className="w-4 h-4 text-amber-300" />
-            <span>View / Download QR</span>
-          </button>
-        </div>
-
         {/* Closing Card */}
-        <div className="mt-10 text-center bg-white border border-navy-150 p-6 rounded-3xl max-w-xl mx-auto shadow-xs">
+        <div className="mt-14 text-center bg-white border border-navy-150 p-6 rounded-3xl max-w-xl mx-auto shadow-xs">
           <p className="font-serif text-stone-900 italic text-base">
             “With grateful hearts, we eagerly look forward to sharing every precious moment of our wedding day with you.”
           </p>
