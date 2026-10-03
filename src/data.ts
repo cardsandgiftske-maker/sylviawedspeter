@@ -62,9 +62,8 @@ export const WEDDING_DETAILS = {
     mpesa: {
       title: 'M-Pesa Contribution',
       instruction: 'For digital blessings, you are warmly invited to send via M-Pesa:',
-      recipientName: 'Dr. Peter Kamau / Sylvia Waithira',
-      number: '0722 000 000',
-      tillNumber: '5849201',
+      paybill: '542542',
+      accountNumber: '05044',
     },
     wishlist: [
       {
@@ -150,13 +149,6 @@ export const WEDDING_DETAILS = {
         category: 'Laundry & Home Care',
         brand: 'Philips / Tefal',
         notes: 'Steam iron with sturdy folding ironing board'
-      },
-      {
-        id: 13,
-        name: 'Sony 5.1 Channel Sound System',
-        category: 'Living & Entertainment',
-        brand: 'Sony',
-        notes: '5.1 Channel High-Fidelity Audio System'
       }
     ]
   },
