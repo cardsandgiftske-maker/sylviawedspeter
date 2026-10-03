@@ -1,10 +1,74 @@
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
-import { Clock, Award, Compass, Music, MessageCircle, Gift, Cake, Utensils, Navigation, Heart, Car, MapPin, ExternalLink } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { 
+  Clock, 
+  Award, 
+  Compass, 
+  Music, 
+  MessageCircle, 
+  Gift, 
+  Cake, 
+  Utensils, 
+  Navigation, 
+  Heart, 
+  Car, 
+  MapPin, 
+  ExternalLink,
+  QrCode,
+  Download,
+  Copy,
+  Check,
+  X,
+  Share2
+} from 'lucide-react';
+import QRCode from 'qrcode';
 import { PROGRAM_ITEMS } from '../data';
 
 export default function Program() {
   const [activeTab, setActiveTab] = useState<'all' | 'church' | 'reception'>('all');
+  const [showQrModal, setShowQrModal] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+  const [qrDataUrl, setQrDataUrl] = useState<string>('/wedding_programme_qr.png');
+
+  const getProgrammeUrl = () => {
+    if (typeof window !== 'undefined') {
+      const base = window.location.origin + window.location.pathname;
+      return base.replace(/\/$/, '') + '#program-section';
+    }
+    return 'https://ais-pre-b47vgsimmxxv7t7srqzibv-351758827303.europe-west2.run.app/#program-section';
+  };
+
+  useEffect(() => {
+    const url = getProgrammeUrl();
+    QRCode.toDataURL(url, {
+      width: 700,
+      margin: 2,
+      color: {
+        dark: '#0F2444',
+        light: '#FFFFFF',
+      },
+      errorCorrectionLevel: 'H',
+    })
+      .then((dataUrl) => {
+        setQrDataUrl(dataUrl);
+      })
+      .catch((err) => {
+        console.warn('QR code generation error:', err);
+      });
+  }, []);
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(getProgrammeUrl());
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2500);
+  };
+
+  const handleDownloadQr = () => {
+    const link = document.createElement('a');
+    link.href = qrDataUrl || '/wedding_programme_qr.png';
+    link.download = 'Sylvia_and_Dr_Peter_Wedding_Programme_QR.png';
+    link.click();
+  };
 
   const filteredItems = PROGRAM_ITEMS.filter((item) => {
     if (activeTab === 'all') return true;
@@ -41,8 +105,8 @@ export default function Program() {
           </p>
         </div>
 
-        {/* Tab Filters */}
-        <div className="flex justify-center mb-12">
+        {/* Tab Filters & QR Code Action */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-12">
           <div className="inline-flex bg-navy-50/70 border border-navy-200 p-1.5 rounded-full shadow-xs gap-1">
             <button
               onClick={() => setActiveTab('all')}
@@ -69,6 +133,16 @@ export default function Program() {
               Reception (1 PM – 5 PM)
             </button>
           </div>
+
+          {/* Quick QR Button */}
+          <button
+            onClick={() => setShowQrModal(true)}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-navy-50 border border-navy-300 hover:border-navy-500 rounded-full text-xs font-sans font-bold uppercase tracking-wider text-navy-950 shadow-xs hover:shadow-md transition-all cursor-pointer active:scale-95"
+            title="Scan or print QR code for the Wedding Programme"
+          >
+            <QrCode className="w-4 h-4 text-navy-800" />
+            <span>Programme QR Code</span>
+          </button>
         </div>
 
         {/* Program Timeline */}
@@ -156,8 +230,36 @@ export default function Program() {
           ))}
         </div>
 
+        {/* QR Code Quick Banner Card */}
+        <div className="mt-14 bg-white border border-navy-200/90 rounded-3xl p-6 sm:p-7 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-5">
+          <div className="flex items-center gap-4 text-center sm:text-left">
+            <div className="w-16 h-16 rounded-2xl bg-navy-50 border border-navy-200 p-2 flex items-center justify-center shrink-0 shadow-2xs">
+              <img
+                src={qrDataUrl}
+                alt="Programme QR Code Preview"
+                className="w-full h-full object-contain rounded-lg"
+              />
+            </div>
+            <div>
+              <h4 className="font-serif text-lg text-navy-950 font-semibold">
+                Wedding Programme QR Code
+              </h4>
+              <p className="text-xs text-stone-600 font-sans mt-0.5 max-w-md">
+                Guests can scan this code to follow the order of events on their phones. Download the high-res PNG for church bulletins or table cards.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setShowQrModal(true)}
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-navy-900 hover:bg-navy-800 text-white rounded-full text-xs font-sans font-bold uppercase tracking-wider shadow-md hover:shadow-lg transition-all cursor-pointer shrink-0 active:scale-95"
+          >
+            <QrCode className="w-4 h-4 text-amber-300" />
+            <span>View / Download QR</span>
+          </button>
+        </div>
+
         {/* Closing Card */}
-        <div className="mt-14 text-center bg-white border border-navy-150 p-6 rounded-3xl max-w-xl mx-auto shadow-xs">
+        <div className="mt-10 text-center bg-white border border-navy-150 p-6 rounded-3xl max-w-xl mx-auto shadow-xs">
           <p className="font-serif text-stone-900 italic text-base">
             “With grateful hearts, we eagerly look forward to sharing every precious moment of our wedding day with you.”
           </p>
@@ -166,6 +268,85 @@ export default function Program() {
           </p>
         </div>
       </div>
+
+      {/* QR Code Modal Dialog */}
+      <AnimatePresence>
+        {showQrModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-navy-950/70 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ duration: 0.2 }}
+              className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-navy-200 relative text-center"
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setShowQrModal(false)}
+                className="absolute top-4 right-4 p-2 text-stone-400 hover:text-navy-900 hover:bg-navy-50 rounded-full transition-colors cursor-pointer"
+                title="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-navy-800 bg-navy-50 border border-navy-200 px-3 py-1 rounded-full inline-block mb-2">
+                Digital Guest Programme
+              </span>
+
+              <h3 className="font-serif text-2xl text-navy-950 font-medium">
+                Wedding Programme QR Code
+              </h3>
+              <p className="text-xs text-stone-600 font-sans mt-1 mb-5">
+                Scan with any smartphone camera to open the live schedule directly.
+              </p>
+
+              {/* QR Code Container */}
+              <div className="bg-white border-2 border-navy-900/90 rounded-2xl p-4 inline-block shadow-md mb-5 mx-auto">
+                <img
+                  src={qrDataUrl}
+                  alt="Sylvia & Dr. Peter Wedding Programme QR Code"
+                  className="w-56 h-56 sm:w-64 sm:h-64 object-contain mx-auto"
+                />
+                <div className="mt-2 text-[10px] font-mono text-stone-500 font-medium tracking-tight break-all max-w-[240px] truncate mx-auto">
+                  {getProgrammeUrl()}
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <button
+                  onClick={handleDownloadQr}
+                  className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-navy-900 hover:bg-navy-800 text-white rounded-xl text-xs font-sans font-bold uppercase tracking-wider shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-95"
+                >
+                  <Download className="w-4 h-4 text-amber-300" />
+                  <span>Download PNG</span>
+                </button>
+
+                <button
+                  onClick={handleCopyLink}
+                  className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white hover:bg-navy-50 border border-navy-200 text-navy-900 rounded-xl text-xs font-sans font-bold uppercase tracking-wider shadow-2xs hover:shadow-xs transition-all cursor-pointer active:scale-95"
+                >
+                  {copiedLink ? (
+                    <>
+                      <Check className="w-4 h-4 text-emerald-600" />
+                      <span>Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4" />
+                      <span>Copy Link</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              <p className="text-[11px] text-stone-500 font-sans mt-4 italic">
+                Tip: Perfect for church bulletin inserts, reception welcome signage, and table place cards.
+              </p>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
