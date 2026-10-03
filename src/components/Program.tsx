@@ -394,7 +394,9 @@ export default function Program() {
                     </>
                   )}
                 </button>
-        
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </section>
