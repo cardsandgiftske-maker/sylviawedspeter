@@ -18,7 +18,8 @@ import {
   Download,
   Copy,
   Check,
-  X
+  X,
+  Loader2
 } from 'lucide-react';
 import * as QRCode from 'qrcode';
 import { PROGRAM_ITEMS } from '../data';
@@ -27,7 +28,8 @@ export default function Program() {
   const [activeTab, setActiveTab] = useState<'all' | 'church' | 'reception'>('all');
   const [showQrModal, setShowQrModal] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
-  const [qrDataUrl, setQrDataUrl] = useState<string>('/wedding_programme_qr.png');
+  const [qrDataUrl, setQrDataUrl] = useState<string>('');
+  const [isGeneratingQr, setIsGeneratingQr] = useState<boolean>(true);
 
   const getProgrammeUrl = () => {
     if (typeof window !== 'undefined') {
@@ -39,6 +41,7 @@ export default function Program() {
 
   useEffect(() => {
     const url = getProgrammeUrl();
+    setIsGeneratingQr(true);
     QRCode.toDataURL(url, {
       width: 700,
       margin: 2,
@@ -53,6 +56,9 @@ export default function Program() {
       })
       .catch((err) => {
         console.warn('QR code generation error:', err);
+      })
+      .finally(() => {
+        setIsGeneratingQr(false);
       });
   }, []);
 
@@ -62,9 +68,24 @@ export default function Program() {
     setTimeout(() => setCopiedLink(false), 2500);
   };
 
-  const handleDownloadQr = () => {
+  const handleDownloadQr = async () => {
+    let finalUrl = qrDataUrl;
+    if (!finalUrl) {
+      try {
+        finalUrl = await QRCode.toDataURL(getProgrammeUrl(), {
+          width: 700,
+          margin: 2,
+          color: { dark: '#0F2444', light: '#FFFFFF' },
+          errorCorrectionLevel: 'H',
+        });
+      } catch (err) {
+        console.error('Failed to generate downloadable QR:', err);
+        return;
+      }
+    }
+
     const link = document.createElement('a');
-    link.href = qrDataUrl || '/wedding_programme_qr.png';
+    link.href = finalUrl;
     link.download = 'Sylvia_and_Dr_Peter_Wedding_Programme_QR.png';
     link.click();
   };
@@ -233,11 +254,15 @@ export default function Program() {
         <div className="mt-14 bg-white border border-navy-200/90 rounded-3xl p-6 sm:p-7 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-5">
           <div className="flex items-center gap-4 text-center sm:text-left">
             <div className="w-16 h-16 rounded-2xl bg-navy-50 border border-navy-200 p-2 flex items-center justify-center shrink-0 shadow-2xs">
-              <img
-                src={qrDataUrl}
-                alt="Programme QR Code Preview"
-                className="w-full h-full object-contain rounded-lg"
-              />
+              {qrDataUrl ? (
+                <img
+                  src={qrDataUrl}
+                  alt="Programme QR Code Preview"
+                  className="w-full h-full object-contain rounded-lg"
+                />
+              ) : (
+                <Loader2 className="w-6 h-6 text-navy-700 animate-spin" />
+              )}
             </div>
             <div>
               <h4 className="font-serif text-lg text-navy-950 font-semibold">
@@ -299,12 +324,19 @@ export default function Program() {
               </p>
 
               {/* QR Code Container */}
-              <div className="bg-white border-2 border-navy-900/90 rounded-2xl p-4 inline-block shadow-md mb-5 mx-auto">
-                <img
-                  src={qrDataUrl}
-                  alt="Sylvia & Dr. Peter Wedding Programme QR Code"
-                  className="w-56 h-56 sm:w-64 sm:h-64 object-contain mx-auto"
-                />
+              <div className="bg-white border-2 border-navy-900/90 rounded-2xl p-4 inline-block shadow-md mb-5 mx-auto min-w-[240px] min-h-[240px]">
+                {qrDataUrl ? (
+                  <img
+                    src={qrDataUrl}
+                    alt="Sylvia & Dr. Peter Wedding Programme QR Code"
+                    className="w-56 h-56 sm:w-64 sm:h-64 object-contain mx-auto"
+                  />
+                ) : (
+                  <div className="w-56 h-56 sm:w-64 sm:h-64 flex flex-col items-center justify-center text-stone-400 gap-2">
+                    <Loader2 className="w-8 h-8 animate-spin text-navy-800" />
+                    <span className="text-xs font-sans">Generating QR Code...</span>
+                  </div>
+                )}
                 <div className="mt-2 text-[10px] font-mono text-stone-500 font-medium tracking-tight break-all max-w-[240px] truncate mx-auto">
                   {getProgrammeUrl()}
                 </div>
@@ -314,7 +346,8 @@ export default function Program() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button
                   onClick={handleDownloadQr}
-                  className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-navy-900 hover:bg-navy-800 text-white rounded-xl text-xs font-sans font-bold uppercase tracking-wider shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-95"
+                  disabled={isGeneratingQr && !qrDataUrl}
+                  className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-navy-900 hover:bg-navy-800 disabled:opacity-50 text-white rounded-xl text-xs font-sans font-bold uppercase tracking-wider shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-95"
                 >
                   <Download className="w-4 h-4 text-amber-300" />
                   <span>Download PNG</span>
