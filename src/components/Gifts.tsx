@@ -142,6 +142,12 @@ export default function Gifts() {
                     <p className="font-mono text-base font-bold text-navy-950">
                       {WEDDING_DETAILS.gifts.mpesa.accountNumber}
                     </p>
+                    <p className="text-[10px] uppercase tracking-wider text-stone-400 font-sans font-bold mt-2">
+                      Account Name
+                    </p>
+                    <p className="text-sm font-bold text-navy-950">
+                      {WEDDING_DETAILS.gifts.mpesa.accountName}
+                    </p>
                   </div>
                   <button
                     onClick={() => handleCopy(WEDDING_DETAILS.gifts.mpesa.accountNumber, 'account')}
