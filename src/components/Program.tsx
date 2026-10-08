@@ -252,7 +252,7 @@ export default function Program() {
                 )}
 
                 {/* Dedicated Route Navigation Action */}
-                {(item.title.toLowerCase().includes('scenic') || item.title.toLowerCase().includes('route')) && (
+                {(item.title.toLowerCase().includes('scenic') || item.title.toLowerCase().includes('route') || item.title.toLowerCase().includes('journey')) && (
                   <div className="mt-4 pt-3.5 border-t border-navy-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-navy-50/50 p-3 rounded-xl">
                     <div className="flex items-center gap-2 text-xs font-sans text-navy-900 font-medium">
                       <MapPin className="w-4 h-4 text-navy-700 shrink-0" />
