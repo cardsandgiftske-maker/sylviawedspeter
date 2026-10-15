@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Gift, Mail, Smartphone, Check, Copy, Heart, Sparkles } from 'lucide-react';
+import { Gift, Mail, Smartphone, Check, Copy, Heart, Sparkles, Ticket } from 'lucide-react';
 import { WEDDING_DETAILS } from '../data';
 
 export default function Gifts() {
@@ -43,8 +43,8 @@ export default function Gifts() {
           </div>
         </div>
 
-        {/* Primary Giving Channels: Envelope & M-Pesa */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
+        {/* Primary Giving Channels: Envelope, M-Pesa & Gift Voucher */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto mb-12">
           {/* Option 1: Gift in an Envelope */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -165,6 +165,33 @@ export default function Gifts() {
             <div className="pt-2 flex items-center gap-2 text-[11px] text-stone-500 font-sans">
               <Gift className="w-3.5 h-3.5 text-navy-700 shrink-0" />
               <span>We are deeply touched by your generosity and love.</span>
+            </div>
+          </motion.div>
+          {/* Option 3: Gift Voucher */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="bg-white border border-navy-150 rounded-3xl p-7 shadow-xs hover:border-navy-400 hover:shadow-md transition-all flex flex-col justify-between"
+          >
+            <div>
+              <div className="w-12 h-12 rounded-2xl bg-navy-50 border border-navy-200 text-navy-800 flex items-center justify-center mb-5">
+                <Ticket className="w-6 h-6" />
+              </div>
+              <span className="text-[10px] uppercase tracking-widest font-sans font-bold text-navy-800 bg-navy-50 px-2.5 py-1 rounded-full border border-navy-200 inline-block mb-3">
+                Flexible Gift
+              </span>
+              <h3 className="font-serif text-2xl text-navy-950 font-medium mb-3">
+                Gift Voucher
+              </h3>
+              <p className="text-stone-600 text-sm leading-relaxed font-sans mb-6">
+                A gift voucher from any preferred home, appliance, supermarket, or electronics store would be a thoughtful blessing as we build our home together.
+              </p>
+            </div>
+            <div className="pt-4 border-t border-stone-100 flex items-center gap-3 text-xs text-stone-500 font-sans">
+              <span className="w-2 h-2 rounded-full bg-navy-700 shrink-0" />
+              <span>Any preferred store or retailer</span>
             </div>
           </motion.div>
         </div>
