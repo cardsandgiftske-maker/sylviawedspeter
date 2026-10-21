@@ -36,10 +36,10 @@ export default function DressCode() {
           <div className="max-w-2xl mx-auto mt-8">
             <h3 className="font-serif text-lg text-navy-950 font-semibold mb-4">Wedding Theme Colours</h3>
             <div className="grid grid-cols-3 gap-3">
-              <div className="rounded-2xl border border-[#ADD8E6] bg-white p-3">
-                <div className="h-12 rounded-xl mb-2" style={{ backgroundColor: '#ADD8E6' }} />
+              <div className="rounded-2xl border border-[#90D5FF] bg-white p-3">
+                <div className="h-12 rounded-xl mb-2" style={{ backgroundColor: '#90D5FF' }} />
                 <p className="text-xs font-sans font-semibold text-navy-950">Light Blue</p>
-                <p className="text-[10px] font-mono text-stone-500">#ADD8E6</p>
+                <p className="text-[10px] font-mono text-stone-500">#90D5FF</p>
               </div>
               <div className="rounded-2xl border border-[#0B1F3A] bg-white p-3">
                 <div className="h-12 rounded-xl mb-2" style={{ backgroundColor: '#0B1F3A' }} />
